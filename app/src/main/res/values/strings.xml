@@ -1,6 +1,16 @@
 <resources>
     <string name="app_name">LunchWheel</string>
 
-    <string name="hello_world">Hello world!</string>
+    <string name="action_location">Location</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Fetch latitude and longitude from the given address -->
+    <string name="lookup_address">Lookup Address</string>
+    <string name="error_no_location_data">Error.  No location data found</string>
+    <string name="error_no_address_data">Error.  No address data found</string>
+    <string name="error_address_lookup_unavailable">Error.  Address Look-Up Service Unavailable</string>
+    <string name="error_illegal_address_lookup_arg">Error.  Illegal Address Look-Up Argument</string>
+    <string name="error_address_not_found">Error.  Address Not Found</string>
+    <string name="location_found">Location found</string>
+
 </resources>
