@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,26 +23,32 @@ import com.google.android.gms.location.LocationServices;
 
 public class SetLocationFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener  {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = SetLocationFragment.class.getSimpleName();
+
+    private RadioButton mUseDeviceLocationRadioButton;
+    private RadioButton mSpecifyLocationRadioButton;
 
     private TextView mLatTextView;
     private TextView mLonTextView;
 
+    private View mSpecifyLoctionFields;
     private EditText mCityField;
     private EditText mStateField;
     private Button mLookupAddressButton;
 
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
+    private Location mLastDeviceLocation;
+    private Location mLastSpecifiedLocation = new Location("");
+
     private boolean mLocationAvailable = false;
 
     private LocationResultsReceiver mLocationResultsReceiver;
 
 
     @Override
-    public void onCreate(Bundle bundle)  {
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
 
         mLocationResultsReceiver = new LocationResultsReceiver(new Handler());
@@ -51,7 +58,6 @@ public class SetLocationFragment extends Fragment implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
-
     }
 
     @Override
@@ -60,13 +66,14 @@ public class SetLocationFragment extends Fragment implements
 
         View view = inflater.inflate(R.layout.set_location, container, false);
 
+        mSpecifyLoctionFields = view.findViewById(R.id.specify_location_fields);
+
         mLatTextView = (TextView) view.findViewById(R.id.lat_textView);
         mLonTextView = (TextView) view.findViewById(R.id.lon_textView);
 
         mCityField = (EditText) view.findViewById(R.id.city_editText);
         mStateField = (EditText) view.findViewById(R.id.state_editText);
         mLookupAddressButton = (Button) view.findViewById(R.id.lookup_address_button);
-
 
         mLookupAddressButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,8 +91,43 @@ public class SetLocationFragment extends Fragment implements
             }
         });
 
+        mUseDeviceLocationRadioButton = (RadioButton) view.findViewById(R.id.use_device_location_button);
+        mSpecifyLocationRadioButton = (RadioButton) view.findViewById(R.id.specify_location_button);
+
+        mUseDeviceLocationRadioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLocationType(((RadioButton) v).isChecked());
+            }
+        });
+
+        mSpecifyLocationRadioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLocationType(!((RadioButton) v).isChecked());
+            }
+        });
+
+        setLocationType(true);
+
         return view;
 
+    }
+
+    private void setLocationType(boolean useDevice)  {
+
+        if (useDevice)  {
+            mUseDeviceLocationRadioButton.setChecked(true);
+            mSpecifyLocationRadioButton.setChecked(false);
+            mSpecifyLoctionFields.setVisibility(View.GONE);
+
+        } else  {
+            mUseDeviceLocationRadioButton.setChecked(false);
+            mSpecifyLocationRadioButton.setChecked(true);
+            mSpecifyLoctionFields.setVisibility(View.VISIBLE);
+        }
+
+        setLonLatText();
     }
 
     @Override
@@ -105,14 +147,8 @@ public class SetLocationFragment extends Fragment implements
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "onConnected() called");
 
-        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-        if (mLastLocation != null)  {
-            mLatTextView.setText(String.valueOf(mLastLocation.getLatitude()));
-            mLonTextView.setText(String.valueOf(mLastLocation.getLongitude()));
-            mLocationAvailable = true;
-        }
-
+        mLastDeviceLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        setLonLatText();
     }
 
     @Override
@@ -130,28 +166,49 @@ public class SetLocationFragment extends Fragment implements
 
     }
 
-    class LocationResultsReceiver extends ResultReceiver  {
+    class LocationResultsReceiver extends ResultReceiver {
 
-        public LocationResultsReceiver(Handler handler)  {
+        public LocationResultsReceiver(Handler handler) {
             super(handler);
         }
 
         @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData)  {
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
 
-            if (resultCode == Constants.SUCCESS_RESULT)  {
-                mLatTextView.setText(String.valueOf(resultData.getDouble(Constants.RESULT_LATITUDE)));
-                mLonTextView.setText(String.valueOf(resultData.getDouble(Constants.RESULT_LONGITUDE)));
+            if (resultCode == Constants.SUCCESS_RESULT) {
+                mLastSpecifiedLocation.setLongitude(resultData.getDouble(Constants.RESULT_LONGITUDE));
+                mLastSpecifiedLocation.setLatitude(resultData.getDouble(Constants.RESULT_LATITUDE));
 
                 Toast.makeText(getActivity(),
                         "Location Updated",
                         Toast.LENGTH_SHORT).show();
 
-            } else  {
+                setLonLatText();
+
+            } else {
                 Toast.makeText(getActivity(),
                         resultData.getString(Constants.RESULT_STRING),
                         Toast.LENGTH_SHORT).show();
             }
         }
     }
+
+    private void setLonLatText() {
+
+        Location l = (mUseDeviceLocationRadioButton.isChecked())
+                ? mLastDeviceLocation : mLastSpecifiedLocation;
+
+        if (l != null) {
+            mLatTextView.setText(String.valueOf(l.getLatitude()));
+            mLonTextView.setText(String.valueOf(l.getLongitude()));
+
+            mLocationAvailable = true;
+        } else {
+            mLatTextView.setText("?");
+            mLonTextView.setText("?");
+            mLocationAvailable = false;
+        }
+
+    }
+
 }

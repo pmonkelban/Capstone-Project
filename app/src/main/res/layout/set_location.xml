@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RadioButton
+        android:id="@+id/use_device_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/use_device_location" />
+
+    <RadioButton
+        android:id="@+id/specify_location_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/specify_location" />
 
     <LinearLayout
+        android:id="@+id/specify_location_fields"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -11,7 +25,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="City"/>
+            android:text="City" />
 
         <EditText
             android:id="@+id/city_editText"
@@ -21,18 +35,18 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="State"/>
+            android:text="State" />
 
         <EditText
             android:id="@+id/state_editText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/lookup_address_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/lookup_address"/>
+            android:text="@string/lookup_address" />
 
     </LinearLayout>
 
@@ -42,14 +56,15 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Longitude: "
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Longitude: " />
 
-        <TextView android:id="@+id/lon_textView"
-            android:text="Longitude Goes Here"
+        <TextView
+            android:id="@+id/lon_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Longitude Goes Here" />
 
     </LinearLayout>
 
@@ -59,15 +74,17 @@
         android:orientation="horizontal">
 
         <TextView
-            android:text="Latitude: "
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Latitude: " />
 
-        <TextView android:id="@+id/lat_textView"
-            android:text="Latitude Goes Here"
+        <TextView
+            android:id="@+id/lat_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Latitude Goes Here" />
 
     </LinearLayout>
+
 
 </LinearLayout>
