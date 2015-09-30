@@ -1,14 +1,15 @@
 <resources>
+    <!-- Activities -->
     <string name="app_name">LunchWheel</string>
+    <string name="set_location_activity">Set Location</string>
 
+    <!-- Menu Items -->
     <string name="action_location">Location</string>
     <string name="action_settings">Settings</string>
 
+    <!-- Fetch latitude and longitude from the given address -->
     <string name="use_device_location">Use Device Location</string>
     <string name="specify_location">Manually Specify Location</string>
-
-
-    <!-- Fetch latitude and longitude from the given address -->
     <string name="lookup_address">Lookup Address</string>
     <string name="error_no_location_data">Error.  No location data found</string>
     <string name="error_no_address_data">Error.  No address data found</string>

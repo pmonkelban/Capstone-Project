@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 
 public class SetLocationFragment extends Fragment implements
@@ -64,7 +63,7 @@ public class SetLocationFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.set_location, container, false);
+        View view = inflater.inflate(R.layout.set_location_fragment, container, false);
 
         mSpecifyLoctionFields = view.findViewById(R.id.specify_location_fields);
 
@@ -127,7 +126,7 @@ public class SetLocationFragment extends Fragment implements
             mSpecifyLoctionFields.setVisibility(View.VISIBLE);
         }
 
-        setLonLatText();
+        setLonLat();
     }
 
     @Override
@@ -148,7 +147,7 @@ public class SetLocationFragment extends Fragment implements
         Log.i(TAG, "onConnected() called");
 
         mLastDeviceLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        setLonLatText();
+        setLonLat();
     }
 
     @Override
@@ -183,7 +182,7 @@ public class SetLocationFragment extends Fragment implements
                         "Location Updated",
                         Toast.LENGTH_SHORT).show();
 
-                setLonLatText();
+                setLonLat();
 
             } else {
                 Toast.makeText(getActivity(),
@@ -193,7 +192,7 @@ public class SetLocationFragment extends Fragment implements
         }
     }
 
-    private void setLonLatText() {
+    private void setLonLat() {
 
         Location l = (mUseDeviceLocationRadioButton.isChecked())
                 ? mLastDeviceLocation : mLastSpecifiedLocation;
