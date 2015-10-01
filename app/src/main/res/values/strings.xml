@@ -18,4 +18,8 @@
     <string name="error_address_not_found">Error.  Address Not Found</string>
     <string name="location_found">Location found</string>
 
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="zip">Zip Code</string>
+
 </resources>

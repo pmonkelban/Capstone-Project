@@ -2,11 +2,11 @@ package com.example.pmm.android.udacity.lunchwheel;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.location.Location;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,34 +16,26 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-
-public class SetLocationFragment extends Fragment implements
-        GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+public class SetLocationFragment extends Fragment {
 
     private static final String TAG = SetLocationFragment.class.getSimpleName();
 
     private RadioButton mUseDeviceLocationRadioButton;
     private RadioButton mSpecifyLocationRadioButton;
 
-    private TextView mLatTextView;
-    private TextView mLonTextView;
-
-    private View mSpecifyLoctionFields;
+    private View mSpecifyLocationFields;
     private EditText mCityField;
     private EditText mStateField;
+    private EditText mZipField;
+
     private Button mLookupAddressButton;
 
-    private GoogleApiClient mGoogleApiClient;
-    private Location mLastDeviceLocation;
-    private Location mLastSpecifiedLocation = new Location("");
-
-    private boolean mLocationAvailable = false;
+    private float mLatitude;
+    private float mLongitude;
 
     private LocationResultsReceiver mLocationResultsReceiver;
+
+    private SharedPreferences prefs;
 
 
     @Override
@@ -52,11 +44,9 @@ public class SetLocationFragment extends Fragment implements
 
         mLocationResultsReceiver = new LocationResultsReceiver(new Handler());
 
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity().getApplicationContext())
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+
+        prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+
     }
 
     @Override
@@ -65,16 +55,22 @@ public class SetLocationFragment extends Fragment implements
 
         View view = inflater.inflate(R.layout.set_location_fragment, container, false);
 
-        mSpecifyLoctionFields = view.findViewById(R.id.specify_location_fields);
-
-        mLatTextView = (TextView) view.findViewById(R.id.lat_textView);
-        mLonTextView = (TextView) view.findViewById(R.id.lon_textView);
+        mSpecifyLocationFields = view.findViewById(R.id.specify_location_fields);
 
         mCityField = (EditText) view.findViewById(R.id.city_editText);
         mStateField = (EditText) view.findViewById(R.id.state_editText);
+        mZipField = (EditText) view.findViewById(R.id.zip_editText);
+
+        // Load values from last use
+        mCityField.setText(prefs.getString(Constants.PREF_CITY, ""));
+        mStateField.setText(prefs.getString(Constants.PREF_STATE, ""));
+        mZipField.setText(prefs.getString(Constants.PREF_ZIP, ""));
+
+
         mLookupAddressButton = (Button) view.findViewById(R.id.lookup_address_button);
 
         mLookupAddressButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
 
@@ -83,9 +79,29 @@ public class SetLocationFragment extends Fragment implements
 
                 intent.putExtra(Constants.RECEIVER, mLocationResultsReceiver);
 
-                String address = mCityField.getText() + ", " + mStateField.getText();
-                intent.putExtra(Constants.LOCATION_ADDRESS_EXTRA, address);
+                StringBuilder sb = new StringBuilder();
+                sb.append(mCityField.getText().toString());
+
+                if ((mStateField.getText().toString() != null) &&
+                        (mStateField.getText().toString().trim().length() > 0)) {
+                    sb.append(", ");
+                    sb.append(mStateField.getText().toString().trim().toUpperCase());
+                }
+
+                if ((mZipField.getText().toString() != null) &&
+                        (mZipField.getText().toString().trim().length() > 0)) {
+                    sb.append(" ");
+                    sb.append(mZipField.getText().toString());
+                }
+
+                intent.putExtra(Constants.LOCATION_ADDRESS_EXTRA, sb.toString());
                 getActivity().startService(intent);
+
+                prefs.edit()
+                        .putString(Constants.PREF_CITY, mCityField.getText().toString())
+                        .putString(Constants.PREF_STATE, mStateField.getText().toString())
+                        .putString(Constants.PREF_ZIP, mZipField.getText().toString())
+                        .commit();
 
             }
         });
@@ -93,77 +109,54 @@ public class SetLocationFragment extends Fragment implements
         mUseDeviceLocationRadioButton = (RadioButton) view.findViewById(R.id.use_device_location_button);
         mSpecifyLocationRadioButton = (RadioButton) view.findViewById(R.id.specify_location_button);
 
-        mUseDeviceLocationRadioButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setLocationType(((RadioButton) v).isChecked());
-            }
-        });
 
-        mSpecifyLocationRadioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLocationType(!((RadioButton) v).isChecked());
-            }
-        });
+                if (mSpecifyLocationRadioButton.isChecked()) {
+                    mSpecifyLocationFields.setVisibility(View.VISIBLE);
+                    prefs.edit()
+                            .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_SPECIFY)
+                            .commit();
+                } else {
+                    mSpecifyLocationFields.setVisibility(View.GONE);
+                    prefs.edit()
+                            .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_DEVICE)
+                            .commit();
+                }
 
-        setLocationType(true);
+                setLocation();
+            }
+        };
+
+        mUseDeviceLocationRadioButton.setOnClickListener(onClickListener);
+        mSpecifyLocationRadioButton.setOnClickListener(onClickListener);
+
+        if (prefs.getString(Constants.PREF_LOCATION_MODE, "")
+                .equals(Constants.PREF_LOCATION_MODE_DEVICE)) {
+
+            mUseDeviceLocationRadioButton.setChecked(true);
+            mSpecifyLocationFields.setVisibility(View.GONE);
+
+        } else {
+            mSpecifyLocationRadioButton.setChecked(true);
+            mSpecifyLocationFields.setVisibility(View.VISIBLE);
+
+        }
 
         return view;
 
     }
 
-    private void setLocationType(boolean useDevice)  {
+    private void setLocation() {
 
-        if (useDevice)  {
-            mUseDeviceLocationRadioButton.setChecked(true);
-            mSpecifyLocationRadioButton.setChecked(false);
-            mSpecifyLoctionFields.setVisibility(View.GONE);
-
-        } else  {
-            mUseDeviceLocationRadioButton.setChecked(false);
-            mSpecifyLocationRadioButton.setChecked(true);
-            mSpecifyLoctionFields.setVisibility(View.VISIBLE);
-        }
-
-        setLonLat();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
-    }
-
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        Log.i(TAG, "onConnected() called");
-
-        mLastDeviceLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        setLonLat();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "onConnectionSuspended() called");
+        prefs.edit()
+                .putFloat(Constants.PREF_LATITUDE, mLatitude)
+                .putFloat(Constants.PREF_LONGITUDE, mLongitude)
+                .commit();
 
     }
 
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
-        Log.e(TAG, "onConnectionFailed() called. connectionResult="
-                + connectionResult.toString());
-
-    }
 
     class LocationResultsReceiver extends ResultReceiver {
 
@@ -175,14 +168,14 @@ public class SetLocationFragment extends Fragment implements
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
             if (resultCode == Constants.SUCCESS_RESULT) {
-                mLastSpecifiedLocation.setLongitude(resultData.getDouble(Constants.RESULT_LONGITUDE));
-                mLastSpecifiedLocation.setLatitude(resultData.getDouble(Constants.RESULT_LATITUDE));
+                mLongitude = (float) resultData.getDouble(Constants.RESULT_LONGITUDE);
+                mLatitude = (float) resultData.getDouble(Constants.RESULT_LATITUDE);
 
                 Toast.makeText(getActivity(),
                         "Location Updated",
                         Toast.LENGTH_SHORT).show();
 
-                setLonLat();
+                setLocation();
 
             } else {
                 Toast.makeText(getActivity(),
@@ -190,24 +183,6 @@ public class SetLocationFragment extends Fragment implements
                         Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    private void setLonLat() {
-
-        Location l = (mUseDeviceLocationRadioButton.isChecked())
-                ? mLastDeviceLocation : mLastSpecifiedLocation;
-
-        if (l != null) {
-            mLatTextView.setText(String.valueOf(l.getLatitude()));
-            mLonTextView.setText(String.valueOf(l.getLongitude()));
-
-            mLocationAvailable = true;
-        } else {
-            mLatTextView.setText("?");
-            mLonTextView.setText("?");
-            mLocationAvailable = false;
-        }
-
     }
 
 }

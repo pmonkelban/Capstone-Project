@@ -14,6 +14,19 @@ public class Constants {
     public static final String RESULT_LONGITUDE = PACKAGE_NAME + ".RESULT_LONGITUDE";
     public static final String RESULT_LATITUDE  = PACKAGE_NAME + ".RESULT_LATITUDE";
 
+    public static final String PREF_LATITUDE = "PREF_LATITUDE";
+    public static final String PREF_LONGITUDE = "PREF_LONGITUDE";
+    public static final String PREF_NEW_LOCATION = "PREF_NEW_LOCATION";
+    public static final String PREF_CITY = "PREF_CITY";
+    public static final String PREF_STATE = "PREF_STATE";
+    public static final String PREF_ZIP = "PREF_ZIP";
+
+    public static final String PREF_LOCATION_MODE = "PREF_LOCATION_MODE";
+    public static final String PREF_LOCATION_MODE_SPECIFY = "PREF_LOCATION_MODE_SPECIFY";
+    public static final String PREF_LOCATION_MODE_DEVICE = "PREF_LOCATION_MODE_DEVICE";
+
+
+
     public static final String LOCATION_ADDRESS_EXTRA = PACKAGE_NAME + ".LOCATION_ADDRESS_EXTRA";
 
 }

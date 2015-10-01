@@ -4,28 +4,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RadioButton
-        android:id="@+id/use_device_location_button"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/use_device_location" />
+        android:orientation="vertical">
 
-    <RadioButton
-        android:id="@+id/specify_location_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/specify_location" />
+        <RadioButton
+            android:id="@+id/use_device_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/use_device_location" />
+
+        <RadioButton
+            android:id="@+id/specify_location_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/specify_location" />
+
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/specify_location_fields"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="City" />
+            android:text="@string/city" />
 
         <EditText
             android:id="@+id/city_editText"
@@ -35,10 +42,20 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="State" />
+            android:text="@string/state" />
 
         <EditText
             android:id="@+id/state_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/zip" />
+
+        <EditText
+            android:id="@+id/zip_editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -49,42 +66,5 @@
             android:text="@string/lookup_address" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Longitude: " />
-
-        <TextView
-            android:id="@+id/lon_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Longitude Goes Here" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Latitude: " />
-
-        <TextView
-            android:id="@+id/lat_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Latitude Goes Here" />
-
-    </LinearLayout>
-
 
 </LinearLayout>

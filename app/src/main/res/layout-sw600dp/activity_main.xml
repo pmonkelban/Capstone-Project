@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
 
     <LinearLayout
         android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:layout_height="match_parent">
+        android:orientation="vertical">
 
-        <fragment android:name="com.example.pmm.android.udacity.lunchwheel.SetLocationFragment"
+        <fragment
             android:id="@+id/set_location_fragment"
+            android:name="com.example.pmm.android.udacity.lunchwheel.SetLocationFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -18,8 +20,43 @@
 
     <LinearLayout
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_height="match_parent">
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Latitude: " />
+
+            <TextView
+                android:id="@+id/lat_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Longitude: " />
+
+            <TextView
+                android:id="@+id/lon_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
