@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -33,6 +36,7 @@ public class MainActivity extends AppCompatActivity
 
     private Location mLastDeviceLocation;
 
+    private SearchResultsReceiver mLocationResultsReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +132,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
     @Override
     public void onConnected(Bundle bundle) {
         Log.i(TAG, "onConnected() called");
@@ -180,27 +183,53 @@ public class MainActivity extends AppCompatActivity
 
         String locationMode = prefs.getString(Constants.PREF_LOCATION_MODE, "");
 
+        double lat = 0d;
+        double lon = 0d;
+
         switch (locationMode) {
 
             case Constants.PREF_LOCATION_MODE_SPECIFY:
 
-                mLatTextView.setText(String.valueOf(prefs.getFloat(Constants.PREF_LATITUDE, 0f)));
-                mLonTextView.setText(String.valueOf(prefs.getFloat(Constants.PREF_LONGITUDE, 0f)));
+                lat = prefs.getFloat(Constants.PREF_LATITUDE, 0f);
+                lon = prefs.getFloat(Constants.PREF_LONGITUDE, 0f);
+
                 break;
 
             case Constants.PREF_LOCATION_MODE_DEVICE:
 
                 if (mLastDeviceLocation != null) {
-                    mLatTextView.setText(String.valueOf(mLastDeviceLocation.getLatitude()));
-                    mLonTextView.setText(String.valueOf(mLastDeviceLocation.getLongitude()));
+
+                    lat = mLastDeviceLocation.getLatitude();
+                    lon = mLastDeviceLocation.getLongitude();
                 }
                 break;
 
             default:
-
                 throw new IllegalArgumentException("Unknown location mode : " + locationMode);
         }
 
+        mLatTextView.setText(String.valueOf(lat));
+        mLonTextView.setText(String.valueOf(lon));
+
+        Intent intent = new Intent(getApplicationContext(), SearchService.class);
+        intent.putExtra(Constants.INTENT_LONGITUDE, lon);
+        intent.putExtra(Constants.INTENT_LATITUDE, lat);
+        startService(intent);
+
+
+    }
+
+    class SearchResultsReceiver extends ResultReceiver {
+
+        public SearchResultsReceiver(Handler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void onReceiveResult(int resultCode, Bundle resultData) {
+
+            Log.i(TAG, "in onReceiveResult(). resultCode=" + resultCode);
+        }
     }
 
 

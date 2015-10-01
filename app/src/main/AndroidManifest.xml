@@ -35,6 +35,10 @@
             android:name=".FetchLocationIntentService"
             android:exported="false"/>
 
+        <service
+            android:name=".SearchService"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
