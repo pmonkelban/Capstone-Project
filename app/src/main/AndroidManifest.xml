@@ -31,6 +31,12 @@
                 android:value=".MainActivity" />
         </activity>
 
+        <provider
+            android:name=".data.DataProvider"
+            android:authorities="@string/content_authority"
+            android:exported="false"
+            android:syncable="true" />
+
         <service
             android:name=".FetchLocationIntentService"
             android:exported="false"/>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -178,6 +179,10 @@ public class SetLocationFragment extends Fragment {
                 setLocation();
 
             } else {
+
+                Log.e(TAG, "Error getting location. resultCode=" + resultCode + " msg=" +
+                        resultData.getString(Constants.RESULT_STRING));
+
                 Toast.makeText(getActivity(),
                         resultData.getString(Constants.RESULT_STRING),
                         Toast.LENGTH_SHORT).show();

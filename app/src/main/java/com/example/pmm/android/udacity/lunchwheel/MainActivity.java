@@ -1,27 +1,31 @@
 package com.example.pmm.android.udacity.lunchwheel;
 
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.pmm.android.udacity.lunchwheel.data.DataContract;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 public class MainActivity extends AppCompatActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener,
+        implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener,
+        LoaderManager.LoaderCallbacks<Cursor>  {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -36,7 +40,10 @@ public class MainActivity extends AppCompatActivity
 
     private Location mLastDeviceLocation;
 
-    private SearchResultsReceiver mLocationResultsReceiver;
+    private ListView mListView;
+    private WheelAdapter mWheelAdapter;
+
+    public static final int RESTAURANT_LOADER_ID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +78,12 @@ public class MainActivity extends AppCompatActivity
                     .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_DEVICE)
                     .commit();
         }
+
+        // Create a new Adapter and bind it to the ListView
+        mWheelAdapter = new WheelAdapter(this, null, 0);
+        mListView = (ListView) findViewById(R.id.restaurants_listView);
+        mListView.setAdapter(mWheelAdapter);
+        getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null, this);
 
     }
 
@@ -109,9 +122,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onStart()  {
+        Log.i(TAG, "onStart() called");
+
         super.onStart();
         mGoogleApiClient.connect();
-        prefs.registerOnSharedPreferenceChangeListener(this);
+//        prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -119,7 +134,7 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "onStop() called");
 
         mGoogleApiClient.disconnect();
-        prefs.unregisterOnSharedPreferenceChangeListener(this);
+//        prefs.unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
     }
 
@@ -128,7 +143,7 @@ public class MainActivity extends AppCompatActivity
         Log.i(TAG, "onResume() called");
 
         super.onResume();
-        updateLocation();
+//        updateLocation();
 
     }
 
@@ -154,30 +169,30 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        StringBuilder msg = new StringBuilder();
-        msg.append("Preferences Changed. key=");
-        msg.append(key);
-        msg.append(" value=");
-
-        switch (key) {
-
-            case Constants.PREF_LATITUDE:
-            case Constants.PREF_LONGITUDE:
-                msg.append(String.valueOf(sharedPreferences.getFloat(key, 0F)));
-                break;
-
-            default:
-                msg.append("Unknown key");
-        }
-
-        Log.i(TAG, msg.toString());
-
-        updateLocation();
-
-    }
+//    @Override
+//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+//
+//        StringBuilder msg = new StringBuilder();
+//        msg.append("Preferences Changed. key=");
+//        msg.append(key);
+//        msg.append(" value=");
+//
+//        switch (key) {
+//
+//            case Constants.PREF_LATITUDE:
+//            case Constants.PREF_LONGITUDE:
+//                msg.append(String.valueOf(sharedPreferences.getFloat(key, 0F)));
+//                break;
+//
+//            default:
+//                msg.append("Unknown key");
+//        }
+//
+//        Log.i(TAG, msg.toString());
+//
+//        updateLocation();
+//
+//    }
 
     private void updateLocation()  {
 
@@ -219,18 +234,23 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    class SearchResultsReceiver extends ResultReceiver {
-
-        public SearchResultsReceiver(Handler handler) {
-            super(handler);
-        }
-
-        @Override
-        protected void onReceiveResult(int resultCode, Bundle resultData) {
-
-            Log.i(TAG, "in onReceiveResult(). resultCode=" + resultCode);
-        }
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this,
+                DataContract.RestaurantEntry.CONTENT_URI,
+                null,
+                null,
+                null,
+                null);
     }
 
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mWheelAdapter.swapCursor(data);
+    }
 
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mWheelAdapter.swapCursor(null);
+    }
 }

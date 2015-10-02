@@ -22,4 +22,6 @@
     <string name="state">State</string>
     <string name="zip">Zip Code</string>
 
+    <string name="content_authority">com.example.pmm.android.udacity.lunchwheel</string>
+
 </resources>
