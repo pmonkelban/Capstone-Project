@@ -3,6 +3,8 @@
     <string name="app_name">LunchWheel</string>
     <string name="set_location_activity">Set Location</string>
 
+    <string name="spin">Spin</string>
+
     <!-- Menu Items -->
     <string name="action_location">Location</string>
     <string name="action_settings">Settings</string>
@@ -24,4 +26,7 @@
 
     <string name="content_authority">com.example.pmm.android.udacity.lunchwheel</string>
 
+    <string name="toast_no_device_location">Unable to get location.  Please specify location manually.</string>
+    <string name="toast_no_results">No results to choose from.</string>
+    <string name="toast_announce_winner">And the winner is ...</string>
 </resources>
