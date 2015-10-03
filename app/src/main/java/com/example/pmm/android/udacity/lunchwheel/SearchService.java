@@ -1,8 +1,12 @@
 package com.example.pmm.android.udacity.lunchwheel;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.example.pmm.android.udacity.lunchwheel.data.DataContract;
@@ -26,13 +30,13 @@ public class SearchService extends IntentService {
 
     private static final Object syncLock = new Object();
 
+    public static final int METERS_PER_MILE = 1600; // Close enough
+
     private static final String API_HOST = "api.yelp.com";
     private static final String SEARCH_TERM = "restaurants";
-    private static final String DEFAULT_LOCATION = "40.7577,-73.9857"; // Times Square
     private static final String SEARCH_LIMIT = "20";
-    private static final String SEARCH_RADIUS = "16100"; // 5 miles
+    private static final int DEFAULT_SEARCH_RADIUS = 10 * METERS_PER_MILE;
     private static final String SEARCH_PATH = "/v2/search";
-    private static final String BUSINESS_PATH = "/v2/business";
 
     private String CONSUMER_KEY;
     private String CONSUMER_SECRET;
@@ -68,21 +72,26 @@ public class SearchService extends IntentService {
             }
         }
 
+        // Remove all existing Restaurant entries
+        getApplicationContext()
+                .getContentResolver()
+                .delete(DataContract.RestaurantEntry.CONTENT_URI, null, null);
+
         double latitude = intent.getDoubleExtra(Constants.INTENT_LATITUDE, 0d);
         double longitude = intent.getDoubleExtra(Constants.INTENT_LONGITUDE, 0d);
-        String location;
 
-        if ((latitude == 0d) || (longitude == 0d)) {
-            location = DEFAULT_LOCATION;
-        } else {
-            location = String.valueOf(latitude) + "," + String.valueOf(longitude);
-        }
+        // If location is not valid, do not perform query.
+        if ((latitude == 0d) && (longitude == 0d)) return;
+
+        String location = String.valueOf(latitude) + "," + String.valueOf(longitude);
+
+        int searchRadius = intent.getIntExtra(Constants.INTENT_SEARCH_RADIUS, DEFAULT_SEARCH_RADIUS);
 
         OAuthRequest request1 = createOAuthRequest(SEARCH_PATH);
         request1.addQuerystringParameter("term", SEARCH_TERM);
         request1.addQuerystringParameter("ll", location);
         request1.addQuerystringParameter("limit", SEARCH_LIMIT);
-        request1.addQuerystringParameter("radius_filter", SEARCH_RADIUS);
+        request1.addQuerystringParameter("radius_filter", String.valueOf(searchRadius));
         request1.addQuerystringParameter("sort", String.valueOf(2));
         String response1 = sendRequestAndGetResponse(request1);
 
@@ -90,7 +99,7 @@ public class SearchService extends IntentService {
         request2.addQuerystringParameter("term", SEARCH_TERM);
         request2.addQuerystringParameter("ll", location);
         request2.addQuerystringParameter("limit", SEARCH_LIMIT);
-        request2.addQuerystringParameter("radius_filter", SEARCH_RADIUS);
+        request2.addQuerystringParameter("radius_filter", String.valueOf(searchRadius));
         request2.addQuerystringParameter("sort", String.valueOf(2));
         request2.addQuerystringParameter("offset", String.valueOf(20));
         String response2 = sendRequestAndGetResponse(request2);
@@ -98,21 +107,20 @@ public class SearchService extends IntentService {
         Log.i(TAG, "Yelp API Response_1: " + response1);
         Log.i(TAG, "Yelp API Response_2: " + response2);
 
-        // Remove all existing Restaurant entries
-        getApplicationContext().getContentResolver().delete(DataContract.RestaurantEntry.CONTENT_URI, null, null);
+        float minRating = intent.getFloatExtra(Constants.INTENT_MIN_RATING, 0);
 
-        List<ContentValues> cv1 = insertRestaurantEntriesFromJSON(response1);
-        List<ContentValues> cv2 = insertRestaurantEntriesFromJSON(response2);
+        List<ContentValues> cv1 = insertRestaurantEntriesFromJSON(response1, minRating);
+        List<ContentValues> cv2 = insertRestaurantEntriesFromJSON(response2, minRating);
 
         ContentValues[] cvArray = new ContentValues[cv1.size() + cv2.size()];
 
         int x = 0;
 
-        for (int i = 0; i < cv1.size(); i++)  {
+        for (int i = 0; i < cv1.size(); i++) {
             cvArray[x++] = cv1.get(i);
         }
 
-        for (int i = 0; i < cv2.size(); i++)  {
+        for (int i = 0; i < cv2.size(); i++) {
             cvArray[x++] = cv2.get(i);
         }
 
@@ -121,7 +129,7 @@ public class SearchService extends IntentService {
 
     }
 
-    private List<ContentValues> insertRestaurantEntriesFromJSON(String str) {
+    private List<ContentValues> insertRestaurantEntriesFromJSON(String str, float minRating) {
 
         final String JSON_BUSINESSES = "businesses";
         final String JSON_LOCATION = "location";
@@ -132,6 +140,7 @@ public class SearchService extends IntentService {
         final String JSON_IMAGE = "image_url";
         final String JSON_LAT = "latitude";
         final String JSON_LON = "longitude";
+        final String JSON_RATING = "rating";
 
         List<ContentValues> cvList = new ArrayList<>();
 
@@ -143,6 +152,14 @@ public class SearchService extends IntentService {
             for (int i = 0; i < businesses.length(); i++) {
 
                 JSONObject json_business = businesses.getJSONObject(i);
+
+                String ratingStr = json_business.getString(JSON_RATING);
+                try {
+                    float rating = Float.parseFloat(ratingStr);
+                    if (rating < minRating) continue;
+                } catch (NumberFormatException e)  {
+                    Log.e(TAG, "Invalid rating: " + ratingStr);
+                }
 
                 ContentValues values = new ContentValues();
 
@@ -205,4 +222,38 @@ public class SearchService extends IntentService {
         return response.getBody();
     }
 
+    public static void updateSearchResults(Activity activity) {
+
+        Context context = activity.getApplicationContext();
+
+        SharedPreferences prefs =
+                PreferenceManager.getDefaultSharedPreferences(context);
+
+        double latitude;
+        double longitude;
+
+        if (Constants.PREF_LOCATION_MODE_DEVICE.equals(
+                prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
+
+            latitude = prefs.getFloat(Constants.PREF_DEVICE_LATITUDE, 0f);
+            longitude = prefs.getFloat(Constants.PREF_DEVICE_LONGITUDE, 0f);
+
+        } else  {
+
+            latitude = prefs.getFloat(Constants.PREF_SPECIFIED_LATITUDE, 0f);
+            longitude = prefs.getFloat(Constants.PREF_SPECIFIED_LONGITUDE, 0f);
+        }
+
+        int searchRadius = prefs.getInt(Constants.PREF_SEARCH_RADIUS_IN_MILES, 10) * METERS_PER_MILE;
+        float minRating = prefs.getFloat(Constants.PREF_MIN_RATING, 0);
+
+        Intent intent = new Intent(context, SearchService.class);
+        intent.putExtra(Constants.INTENT_LATITUDE, latitude);
+        intent.putExtra(Constants.INTENT_LONGITUDE, longitude);
+        intent.putExtra(Constants.INTENT_SEARCH_RADIUS, searchRadius);
+        intent.putExtra(Constants.INTENT_MIN_RATING, minRating);
+
+        activity.startService(intent);
+
+    }
 }

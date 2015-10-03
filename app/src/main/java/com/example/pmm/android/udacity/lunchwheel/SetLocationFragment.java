@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class SetLocationFragment extends Fragment {
@@ -31,9 +30,6 @@ public class SetLocationFragment extends Fragment {
 
     private Button mLookupAddressButton;
 
-    private float mLatitude;
-    private float mLongitude;
-
     private LocationResultsReceiver mLocationResultsReceiver;
 
     private SharedPreferences prefs;
@@ -44,7 +40,6 @@ public class SetLocationFragment extends Fragment {
         super.onCreate(bundle);
 
         mLocationResultsReceiver = new LocationResultsReceiver(new Handler());
-
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
 
@@ -126,7 +121,7 @@ public class SetLocationFragment extends Fragment {
                             .commit();
                 }
 
-                setLocation();
+                SearchService.updateSearchResults(getActivity());
             }
         };
 
@@ -134,27 +129,19 @@ public class SetLocationFragment extends Fragment {
         mSpecifyLocationRadioButton.setOnClickListener(onClickListener);
 
         if (prefs.getString(Constants.PREF_LOCATION_MODE, "")
-                .equals(Constants.PREF_LOCATION_MODE_DEVICE)) {
+                .equals(Constants.PREF_LOCATION_MODE_SPECIFY)) {
+
+            mSpecifyLocationRadioButton.setChecked(true);
+            mSpecifyLocationFields.setVisibility(View.VISIBLE);
+
+        } else {
 
             mUseDeviceLocationRadioButton.setChecked(true);
             mSpecifyLocationFields.setVisibility(View.GONE);
 
-        } else {
-            mSpecifyLocationRadioButton.setChecked(true);
-            mSpecifyLocationFields.setVisibility(View.VISIBLE);
-
         }
 
         return view;
-
-    }
-
-    private void setLocation() {
-
-        prefs.edit()
-                .putFloat(Constants.PREF_LATITUDE, mLatitude)
-                .putFloat(Constants.PREF_LONGITUDE, mLongitude)
-                .commit();
 
     }
 
@@ -169,14 +156,17 @@ public class SetLocationFragment extends Fragment {
         protected void onReceiveResult(int resultCode, Bundle resultData) {
 
             if (resultCode == Constants.SUCCESS_RESULT) {
-                mLongitude = (float) resultData.getDouble(Constants.RESULT_LONGITUDE);
-                mLatitude = (float) resultData.getDouble(Constants.RESULT_LATITUDE);
+                prefs.edit()
+                        .putFloat(Constants.PREF_SPECIFIED_LATITUDE, (float) resultData.getDouble(Constants.RESULT_LATITUDE))
+                        .putFloat(Constants.PREF_SPECIFIED_LONGITUDE, (float) resultData.getDouble(Constants.RESULT_LONGITUDE))
+                        .commit();
+
 
                 Toast.makeText(getActivity(),
                         "Location Updated",
                         Toast.LENGTH_SHORT).show();
 
-                setLocation();
+                SearchService.updateSearchResults(getActivity());
 
             } else {
 

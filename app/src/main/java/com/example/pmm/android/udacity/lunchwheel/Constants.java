@@ -15,13 +15,19 @@ public class Constants {
 
     public static final String INTENT_LONGITUDE = "INTENT_LONGITUDE";
     public static final String INTENT_LATITUDE  = "INTENT_LATITUDE";
+    public static final String INTENT_SEARCH_RADIUS = "INTENT_SEARCH_RADIUS";
+    public static final String INTENT_MIN_RATING = "INTENT_MIN_RATING";
 
-    public static final String PREF_LATITUDE = "PREF_LATITUDE";
-    public static final String PREF_LONGITUDE = "PREF_LONGITUDE";
-    public static final String PREF_NEW_LOCATION = "PREF_NEW_LOCATION";
+    public static final String PREF_SPECIFIED_LATITUDE = "PREF_SPECIFIED_LATITUDE";
+    public static final String PREF_SPECIFIED_LONGITUDE = "PREF_SPECIFIED_LONGITUDE";
+    public static final String PREF_DEVICE_LATITUDE = "PREF_DEVICE_LATITUDE";
+    public static final String PREF_DEVICE_LONGITUDE = "PREF_DEVICE_LONGITUDE";
+
+    public static final String PREF_SEARCH_RADIUS_IN_MILES = "PREF_SEARCH_RADIUS_IN_MILES";
     public static final String PREF_CITY = "PREF_CITY";
     public static final String PREF_STATE = "PREF_STATE";
     public static final String PREF_ZIP = "PREF_ZIP";
+    public static final String PREF_MIN_RATING = "PREF_MIN_RATING";
 
     public static final String PREF_LOCATION_MODE = "PREF_LOCATION_MODE";
     public static final String PREF_LOCATION_MODE_SPECIFY = "PREF_LOCATION_MODE_SPECIFY";

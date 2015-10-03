@@ -25,14 +25,11 @@ public class MainActivity extends AppCompatActivity
         implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LoaderManager.LoaderCallbacks<Cursor>  {
+        LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private boolean mIsTwoPanel = false;
-
-    private TextView mLatTextView;
-    private TextView mLonTextView;
 
     SharedPreferences prefs;
 
@@ -48,6 +45,18 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /*
+        * Set the location mode to device if it hasn't been set yet.
+        */
+        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        if (!prefs.contains(Constants.PREF_LOCATION_MODE)) {
+            prefs.edit()
+                    .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_DEVICE)
+                    .commit();
+        }
+
         setContentView(R.layout.activity_main);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
@@ -56,27 +65,11 @@ public class MainActivity extends AppCompatActivity
                 .addOnConnectionFailedListener(this)
                 .build();
 
-        if (findViewById(R.id.set_location_fragment) != null)  {
+        if (findViewById(R.id.set_location_fragment) != null) {
             mIsTwoPanel = true;
             Log.i(TAG, "Using Two Panel Mode");
-        } else  {
+        } else {
             Log.i(TAG, "Using Single Panel Mode.");
-        }
-
-        mLatTextView = (TextView) findViewById(R.id.lat_textView);
-        mLonTextView = (TextView) findViewById(R.id.lon_textView);
-
-        prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        /*
-        * Set the location mode to device if it hasn't been set yet.
-        */
-        String locationMode = prefs.getString(Constants.PREF_LOCATION_MODE, "");
-
-        if ("".equals(locationMode))  {
-            prefs.edit()
-                    .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_DEVICE)
-                    .commit();
         }
 
         // Create a new Adapter and bind it to the ListView
@@ -121,30 +114,26 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onStart()  {
+    public void onStart() {
         Log.i(TAG, "onStart() called");
 
         super.onStart();
         mGoogleApiClient.connect();
-//        prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
-    public void onStop()  {
+    public void onStop() {
         Log.i(TAG, "onStop() called");
 
         mGoogleApiClient.disconnect();
-//        prefs.unregisterOnSharedPreferenceChangeListener(this);
         super.onStop();
     }
 
     @Override
-    public void onResume()  {
+    public void onResume() {
         Log.i(TAG, "onResume() called");
 
         super.onResume();
-//        updateLocation();
-
     }
 
     @Override
@@ -169,68 +158,23 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-//    @Override
-//    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-//
-//        StringBuilder msg = new StringBuilder();
-//        msg.append("Preferences Changed. key=");
-//        msg.append(key);
-//        msg.append(" value=");
-//
-//        switch (key) {
-//
-//            case Constants.PREF_LATITUDE:
-//            case Constants.PREF_LONGITUDE:
-//                msg.append(String.valueOf(sharedPreferences.getFloat(key, 0F)));
-//                break;
-//
-//            default:
-//                msg.append("Unknown key");
-//        }
-//
-//        Log.i(TAG, msg.toString());
-//
-//        updateLocation();
-//
-//    }
-
-    private void updateLocation()  {
+    private void updateLocation() {
 
         String locationMode = prefs.getString(Constants.PREF_LOCATION_MODE, "");
 
-        double lat = 0d;
-        double lon = 0d;
+        if (Constants.PREF_LOCATION_MODE_DEVICE.equals(locationMode)) {
 
-        switch (locationMode) {
+            prefs.edit()
+                    .putFloat(Constants.PREF_DEVICE_LATITUDE, (float) mLastDeviceLocation.getLatitude())
+                    .putFloat(Constants.PREF_DEVICE_LONGITUDE, (float) mLastDeviceLocation.getLongitude())
+                    .commit();
 
-            case Constants.PREF_LOCATION_MODE_SPECIFY:
+            if (Constants.PREF_LOCATION_MODE_DEVICE.equals(
+                    prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
 
-                lat = prefs.getFloat(Constants.PREF_LATITUDE, 0f);
-                lon = prefs.getFloat(Constants.PREF_LONGITUDE, 0f);
-
-                break;
-
-            case Constants.PREF_LOCATION_MODE_DEVICE:
-
-                if (mLastDeviceLocation != null) {
-
-                    lat = mLastDeviceLocation.getLatitude();
-                    lon = mLastDeviceLocation.getLongitude();
-                }
-                break;
-
-            default:
-                throw new IllegalArgumentException("Unknown location mode : " + locationMode);
+                SearchService.updateSearchResults(this);
+            }
         }
-
-        mLatTextView.setText(String.valueOf(lat));
-        mLonTextView.setText(String.valueOf(lon));
-
-        Intent intent = new Intent(getApplicationContext(), SearchService.class);
-        intent.putExtra(Constants.INTENT_LONGITUDE, lon);
-        intent.putExtra(Constants.INTENT_LATITUDE, lat);
-        startService(intent);
-
 
     }
 
