@@ -14,7 +14,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,12 +23,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SetLocationActivity"
+            android:name=".activities.SetLocationActivity"
             android:label="@string/set_location_activity"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.ResultsActivity"
+            android:label="@string/results_activity"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
         </activity>
 
         <provider
@@ -38,11 +46,11 @@
             android:syncable="true" />
 
         <service
-            android:name=".FetchLocationIntentService"
+            android:name=".services.FetchLocationIntentService"
             android:exported="false"/>
 
         <service
-            android:name=".SearchService"
+            android:name=".services.SearchService"
             android:exported="false"/>
 
     </application>

@@ -1,4 +1,4 @@
-package com.example.pmm.android.udacity.lunchwheel;
+package com.example.pmm.android.udacity.lunchwheel.services;
 
 import android.app.Activity;
 import android.app.IntentService;
@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.example.pmm.android.udacity.lunchwheel.Constants;
+import com.example.pmm.android.udacity.lunchwheel.R;
 import com.example.pmm.android.udacity.lunchwheel.data.DataContract;
 
 import org.json.JSONArray;

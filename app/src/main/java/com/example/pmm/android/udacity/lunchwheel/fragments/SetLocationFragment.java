@@ -1,4 +1,4 @@
-package com.example.pmm.android.udacity.lunchwheel;
+package com.example.pmm.android.udacity.lunchwheel.fragments;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -15,6 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import com.example.pmm.android.udacity.lunchwheel.Constants;
+import com.example.pmm.android.udacity.lunchwheel.R;
+import com.example.pmm.android.udacity.lunchwheel.services.FetchLocationIntentService;
+import com.example.pmm.android.udacity.lunchwheel.services.SearchService;
 
 public class SetLocationFragment extends Fragment {
 

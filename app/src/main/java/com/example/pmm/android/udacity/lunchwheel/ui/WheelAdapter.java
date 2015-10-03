@@ -1,4 +1,4 @@
-package com.example.pmm.android.udacity.lunchwheel;
+package com.example.pmm.android.udacity.lunchwheel.ui;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+import com.example.pmm.android.udacity.lunchwheel.R;
 import com.example.pmm.android.udacity.lunchwheel.data.DataProvider;
 
 public class WheelAdapter extends CursorAdapter {

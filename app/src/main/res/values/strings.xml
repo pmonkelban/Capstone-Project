@@ -2,8 +2,12 @@
     <!-- Activities -->
     <string name="app_name">LunchWheel</string>
     <string name="set_location_activity">Set Location</string>
+    <string name="results_activity">Results</string>
 
     <string name="spin">Spin</string>
+    <string name="route_to_restaurant">Route to restaurant</string>
+    <string name="todays_lunch_is_at">Today\'s Lunch will be at...</string>
+
 
     <!-- Menu Items -->
     <string name="action_location">Location</string>

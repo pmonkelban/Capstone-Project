@@ -1,4 +1,4 @@
-package com.example.pmm.android.udacity.lunchwheel;
+package com.example.pmm.android.udacity.lunchwheel.services;
 
 import org.scribe.builder.api.DefaultApi10a;
 import org.scribe.model.Token;

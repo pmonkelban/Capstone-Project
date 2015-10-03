@@ -11,8 +11,8 @@
         android:orientation="vertical">
 
         <fragment
-            android:id="@+id/set_location_fragment"
-            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.SetLocationFragment"
+            android:id="@+id/result_description"
+            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.ResultFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -24,18 +24,11 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/restaurants_listView"
+        <fragment
+            android:id="@+id/result_map"
+            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.ResultMapFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/spin_wheel_button"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/spin"/>
-
 
     </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.example.pmm.android.udacity.lunchwheel;
+package com.example.pmm.android.udacity.lunchwheel.activities;
 
 import android.app.LoaderManager;
 import android.content.CursorLoader;
@@ -18,8 +18,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.pmm.android.udacity.lunchwheel.Constants;
+import com.example.pmm.android.udacity.lunchwheel.R;
 import com.example.pmm.android.udacity.lunchwheel.data.DataContract;
 import com.example.pmm.android.udacity.lunchwheel.data.DataProvider;
+import com.example.pmm.android.udacity.lunchwheel.services.SearchService;
+import com.example.pmm.android.udacity.lunchwheel.ui.WheelAdapter;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -123,9 +127,6 @@ public class MainActivity extends AppCompatActivity
         mListView.setAdapter(mWheelAdapter);
         getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null, this);
 
-
-
-
     }
 
     private void showInterstitialAd()  {
@@ -159,6 +160,9 @@ public class MainActivity extends AppCompatActivity
                 c.getString(DataProvider.RESTAURANT_INDEX_NAME);
 
         Toast.makeText(getApplicationContext(), winner, Toast.LENGTH_LONG).show();
+
+        Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+        startActivity(intent);
 
     }
 

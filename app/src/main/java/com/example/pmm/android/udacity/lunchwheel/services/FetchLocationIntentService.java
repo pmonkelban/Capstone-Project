@@ -1,13 +1,15 @@
-package com.example.pmm.android.udacity.lunchwheel;
+package com.example.pmm.android.udacity.lunchwheel.services;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.util.Log;
+
+import com.example.pmm.android.udacity.lunchwheel.Constants;
+import com.example.pmm.android.udacity.lunchwheel.R;
 
 import java.io.IOException;
 import java.util.List;
