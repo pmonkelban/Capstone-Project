@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import com.example.pmm.android.udacity.lunchwheel.data.DataContract;
 import com.example.pmm.android.udacity.lunchwheel.data.DataProvider;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -52,9 +55,41 @@ public class MainActivity extends AppCompatActivity
 
 //    public static final double REFRESH_DISTANCE_METERS = 100d;
 
+    InterstitialAd mInterstitialAd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        mSpinButton = (Button) findViewById(R.id.spin_wheel_button);
+        mSpinButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInterstitialAd();
+            }
+        });
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_id));
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mSpinButton.setEnabled(true);
+            }
+
+            @Override
+            public void onAdClosed() {
+                super.onAdClosed();
+                requestNewInterstitial();
+                doSpinWheel();
+            }
+        });
+
+        requestNewInterstitial();
+
 
         rnd = new Random(System.currentTimeMillis());
 
@@ -68,8 +103,6 @@ public class MainActivity extends AppCompatActivity
                     .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_DEVICE)
                     .commit();
         }
-
-        setContentView(R.layout.activity_main);
 
         mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .addApi(LocationServices.API)
@@ -90,15 +123,13 @@ public class MainActivity extends AppCompatActivity
         mListView.setAdapter(mWheelAdapter);
         getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null, this);
 
-        mSpinButton = (Button) findViewById(R.id.spin_wheel_button);
-        mSpinButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doSpinWheel();
-            }
-        });
 
 
+
+    }
+
+    private void showInterstitialAd()  {
+        mInterstitialAd.show();
     }
 
     private void doSpinWheel() {
@@ -259,5 +290,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mWheelAdapter.swapCursor(null);
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("SEE_YOUR_LOGCAT_TO_GET_YOUR_DEVICE_ID")
+                .build();
+
+        mInterstitialAd.loadAd(adRequest);
     }
 }
