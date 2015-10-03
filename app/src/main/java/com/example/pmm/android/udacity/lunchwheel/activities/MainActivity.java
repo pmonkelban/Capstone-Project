@@ -129,8 +129,9 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    private void showInterstitialAd()  {
-        mInterstitialAd.show();
+    private void showInterstitialAd() {
+//        mInterstitialAd.show();
+        doSpinWheel();
     }
 
     private void doSpinWheel() {
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity
                 null,
                 null);
 
-        if (c.getCount() == 0)  {
+        if (c.getCount() == 0) {
             Toast.makeText(
                     getApplicationContext(),
                     getString(R.string.toast_no_results),
@@ -155,13 +156,14 @@ public class MainActivity extends AppCompatActivity
 
         c.moveToPosition(randomPositon);
 
-        String winner = getString(R.string.toast_announce_winner) +
-                System.getProperty("line.separator") +
-                c.getString(DataProvider.RESTAURANT_INDEX_NAME);
-
-        Toast.makeText(getApplicationContext(), winner, Toast.LENGTH_LONG).show();
+//        String winner = getString(R.string.toast_announce_winner) +
+//                System.getProperty("line.separator") +
+//                c.getString(DataProvider.RESTAURANT_INDEX_NAME);
+//
+//        Toast.makeText(getApplicationContext(), winner, Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+        intent.putExtra(Constants.INTENT_RESULT_ID, c.getString(DataProvider.RESTAURANT_INDEX_ID));
         startActivity(intent);
 
     }
@@ -269,7 +271,7 @@ public class MainActivity extends AppCompatActivity
             } else {
 
 //                if (Util.distance(old_lat, lat, old_lon, lon, 0d, 0d) > REFRESH_DISTANCE_METERS) {
-                    SearchService.updateSearchResults(this);
+                SearchService.updateSearchResults(this);
 //                }
             }
         }

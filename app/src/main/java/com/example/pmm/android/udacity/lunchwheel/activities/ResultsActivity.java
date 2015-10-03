@@ -1,20 +1,27 @@
 package com.example.pmm.android.udacity.lunchwheel.activities;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.example.pmm.android.udacity.lunchwheel.Constants;
 import com.example.pmm.android.udacity.lunchwheel.R;
+import com.example.pmm.android.udacity.lunchwheel.data.DataContract;
+import com.example.pmm.android.udacity.lunchwheel.data.DataProvider;
+import com.squareup.picasso.Picasso;
 
 public class ResultsActivity extends AppCompatActivity {
 
     private static final String TAG = ResultsActivity.class.getSimpleName();
 
     private boolean mIsTwoPanel = false;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -13,6 +13,7 @@ public class Constants {
     public static final String RESULT_LONGITUDE = PACKAGE_NAME + ".RESULT_LONGITUDE";
     public static final String RESULT_LATITUDE  = PACKAGE_NAME + ".RESULT_LATITUDE";
 
+    public static final String INTENT_RESULT_ID = "INTENT_RESULT_ID";
     public static final String INTENT_LONGITUDE = "INTENT_LONGITUDE";
     public static final String INTENT_LATITUDE  = "INTENT_LATITUDE";
     public static final String INTENT_SEARCH_RADIUS = "INTENT_SEARCH_RADIUS";

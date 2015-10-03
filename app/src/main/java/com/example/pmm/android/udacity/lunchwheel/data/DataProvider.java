@@ -16,7 +16,7 @@ public class DataProvider extends ContentProvider {
     public static final int RESTAURANT_INDEX_NAME = 1;
     public static final int RESTAURANT_INDEX_URL = 2;
     public static final int RESTAURANT_INDEX_IMAGE = 3;
-    public static final int RESTAURANT_INDEX_LONG = 4;
+    public static final int RESTAURANT_INDEX_LON = 4;
     public static final int RESTAURANT_INDEX_LAT = 5;
 
 
