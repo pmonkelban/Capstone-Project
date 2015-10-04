@@ -5,14 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.pmm.android.udacity.lunchwheel.R;
 
-public class ResultsActivity extends AppCompatActivity {
+public class LocationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_result);
+        setContentView(R.layout.activity_location);
 
     }
-
 }

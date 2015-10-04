@@ -40,4 +40,9 @@ public class Constants {
 
     public static final String YELP_SEARCH_TERM = "YELP_SEARCH_TERM";
 
+    public static final int DEFAULT_SEARCH_RADIUS = 10;
+
+    public static final float DEFAULT_MIN_RATING = 3.5f;
+
+
 }

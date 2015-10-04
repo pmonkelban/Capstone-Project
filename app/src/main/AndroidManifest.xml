@@ -23,8 +23,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SetLocationActivity"
-            android:label="@string/set_location_activity"
+            android:name=".activities.LocationActivity"
+            android:label="@string/location_activity"
+            android:parentActivityName=".activities.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activities.PreferencesActivity"
+            android:label="@string/preferences_activity"
             android:parentActivityName=".activities.MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

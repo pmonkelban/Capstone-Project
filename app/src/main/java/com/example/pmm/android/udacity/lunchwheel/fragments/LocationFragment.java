@@ -21,9 +21,9 @@ import com.example.pmm.android.udacity.lunchwheel.R;
 import com.example.pmm.android.udacity.lunchwheel.services.FetchLocationIntentService;
 import com.example.pmm.android.udacity.lunchwheel.services.SearchService;
 
-public class SetLocationFragment extends Fragment {
+public class LocationFragment extends Fragment {
 
-    private static final String TAG = SetLocationFragment.class.getSimpleName();
+    private static final String TAG = LocationFragment.class.getSimpleName();
 
     private RadioButton mUseDeviceLocationRadioButton;
     private RadioButton mSpecifyLocationRadioButton;
@@ -54,7 +54,7 @@ public class SetLocationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.set_location_fragment, container, false);
+        View view = inflater.inflate(R.layout.location_fragment, container, false);
 
         mSpecifyLocationFields = view.findViewById(R.id.specify_location_fields);
 

@@ -1,7 +1,8 @@
 <resources>
     <!-- Activities -->
     <string name="app_name">LunchWheel</string>
-    <string name="set_location_activity">Set Location</string>
+    <string name="location_activity">Set Location</string>
+    <string name="preferences_activity">Preferences</string>
     <string name="results_activity">Results</string>
 
     <string name="spin">Spin</string>
@@ -29,6 +30,14 @@
     <string name="city">City</string>
     <string name="state">State</string>
     <string name="zip">Zip Code</string>
+
+    <!-- Preferences Fragment -->
+    <string name="max_distance">Maximum Distance</string>
+    <string name="selected_miles">%d Miles</string>
+    <string name="min_rating">Minimum Rating</string>
+    <string name="save_preferences">Save Preferences</string>
+    <string name="preferences_saved">Preferences Saved</string>
+
 
     <string name="content_authority">com.example.pmm.android.udacity.lunchwheel</string>
 

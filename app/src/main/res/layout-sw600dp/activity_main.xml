@@ -12,7 +12,13 @@
 
         <fragment
             android:id="@+id/set_location_fragment"
-            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.SetLocationFragment"
+            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.LocationFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <fragment
+            android:id="@+id/set_location_frame"
+            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.PreferencesFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

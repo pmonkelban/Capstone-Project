@@ -102,11 +102,7 @@ public class MainActivity extends AppCompatActivity
         */
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        if (!prefs.contains(Constants.PREF_LOCATION_MODE)) {
-            prefs.edit()
-                    .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_DEVICE)
-                    .commit();
-        }
+        setDefaultPreferences();
 
         mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .addApi(LocationServices.API)
@@ -127,6 +123,27 @@ public class MainActivity extends AppCompatActivity
         mListView.setAdapter(mWheelAdapter);
         getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null, this);
 
+    }
+
+    private void setDefaultPreferences() {
+
+        if (!prefs.contains(Constants.PREF_LOCATION_MODE)) {
+            prefs.edit()
+                    .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_DEVICE)
+                    .commit();
+        }
+
+        if (!prefs.contains(Constants.PREF_SEARCH_RADIUS_IN_MILES)) {
+            prefs.edit()
+                    .putInt(Constants.PREF_SEARCH_RADIUS_IN_MILES, Constants.DEFAULT_SEARCH_RADIUS)
+                    .commit();
+        }
+
+        if (!prefs.contains(Constants.PREF_MIN_RATING)) {
+            prefs.edit()
+                    .putFloat(Constants.PREF_MIN_RATING, Constants.DEFAULT_MIN_RATING)
+                    .commit();
+        }
     }
 
     private void showInterstitialAd() {
@@ -187,10 +204,11 @@ public class MainActivity extends AppCompatActivity
         switch (item.getItemId()) {
 
             case R.id.action_settings:
+                startActivity(new Intent(this, PreferencesActivity.class));
                 break;
 
             case R.id.action_location:
-                startActivity(new Intent(this, SetLocationActivity.class));
+                startActivity(new Intent(this, LocationActivity.class));
                 break;
 
             default:
