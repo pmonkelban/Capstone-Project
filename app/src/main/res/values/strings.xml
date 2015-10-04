@@ -44,4 +44,8 @@
     <string name="toast_no_device_location">Unable to get location.  Please specify location manually.</string>
     <string name="toast_no_results">No results to choose from.</string>
     <string name="toast_announce_winner">And the winner is ...</string>
+
+    <!-- IO Errors -->
+    <string name="error_oauth_exception">Error retrieving data.  Check network connection.</string>
+
 </resources>

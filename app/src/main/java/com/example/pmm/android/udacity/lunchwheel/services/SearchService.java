@@ -6,8 +6,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.pmm.android.udacity.lunchwheel.Constants;
 import com.example.pmm.android.udacity.lunchwheel.R;
@@ -17,6 +19,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
+import org.scribe.exceptions.OAuthConnectionException;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
@@ -28,7 +31,7 @@ import java.util.List;
 
 public class SearchService extends IntentService {
 
-    private static final String TAG = FetchLocationIntentService.class.getSimpleName();
+    private static final String TAG = SearchService.class.getSimpleName();
 
     private static final Object syncLock = new Object();
 
@@ -89,45 +92,66 @@ public class SearchService extends IntentService {
 
         int searchRadius = intent.getIntExtra(Constants.INTENT_SEARCH_RADIUS, DEFAULT_SEARCH_RADIUS);
 
-        OAuthRequest request1 = createOAuthRequest(SEARCH_PATH);
-        request1.addQuerystringParameter("term", SEARCH_TERM);
-        request1.addQuerystringParameter("ll", location);
-        request1.addQuerystringParameter("limit", SEARCH_LIMIT);
-        request1.addQuerystringParameter("radius_filter", String.valueOf(searchRadius));
-        request1.addQuerystringParameter("sort", String.valueOf(2));
-        String response1 = sendRequestAndGetResponse(request1);
+        try {
 
-        OAuthRequest request2 = createOAuthRequest(SEARCH_PATH);
-        request2.addQuerystringParameter("term", SEARCH_TERM);
-        request2.addQuerystringParameter("ll", location);
-        request2.addQuerystringParameter("limit", SEARCH_LIMIT);
-        request2.addQuerystringParameter("radius_filter", String.valueOf(searchRadius));
-        request2.addQuerystringParameter("sort", String.valueOf(2));
-        request2.addQuerystringParameter("offset", String.valueOf(20));
-        String response2 = sendRequestAndGetResponse(request2);
+            OAuthRequest request1 = createOAuthRequest(SEARCH_PATH);
+            request1.addQuerystringParameter("term", SEARCH_TERM);
+            request1.addQuerystringParameter("ll", location);
+            request1.addQuerystringParameter("limit", SEARCH_LIMIT);
+            request1.addQuerystringParameter("radius_filter", String.valueOf(searchRadius));
+            request1.addQuerystringParameter("sort", String.valueOf(2));
+            String response1 = sendRequestAndGetResponse(request1);
 
-        Log.i(TAG, "Yelp API Response_1: " + response1);
-        Log.i(TAG, "Yelp API Response_2: " + response2);
+            OAuthRequest request2 = createOAuthRequest(SEARCH_PATH);
+            request2.addQuerystringParameter("term", SEARCH_TERM);
+            request2.addQuerystringParameter("ll", location);
+            request2.addQuerystringParameter("limit", SEARCH_LIMIT);
+            request2.addQuerystringParameter("radius_filter", String.valueOf(searchRadius));
+            request2.addQuerystringParameter("sort", String.valueOf(2));
+            request2.addQuerystringParameter("offset", String.valueOf(20));
+            String response2 = sendRequestAndGetResponse(request2);
 
-        float minRating = intent.getFloatExtra(Constants.INTENT_MIN_RATING, 0);
 
-        List<ContentValues> cv1 = insertRestaurantEntriesFromJSON(response1, minRating);
-        List<ContentValues> cv2 = insertRestaurantEntriesFromJSON(response2, minRating);
+            Log.i(TAG, "Yelp API Response_1: " + response1);
+            Log.i(TAG, "Yelp API Response_2: " + response2);
 
-        ContentValues[] cvArray = new ContentValues[cv1.size() + cv2.size()];
+            float minRating = intent.getFloatExtra(Constants.INTENT_MIN_RATING, 0);
 
-        int x = 0;
+            List<ContentValues> cv1 = insertRestaurantEntriesFromJSON(response1, minRating);
+            List<ContentValues> cv2 = insertRestaurantEntriesFromJSON(response2, minRating);
 
-        for (int i = 0; i < cv1.size(); i++) {
-            cvArray[x++] = cv1.get(i);
+            ContentValues[] cvArray = new ContentValues[cv1.size() + cv2.size()];
+
+            int x = 0;
+
+            for (int i = 0; i < cv1.size(); i++) {
+                cvArray[x++] = cv1.get(i);
+            }
+
+            for (int i = 0; i < cv2.size(); i++) {
+                cvArray[x++] = cv2.get(i);
+            }
+
+            getApplicationContext().getContentResolver().bulkInsert(DataContract.RestaurantEntry.CONTENT_URI, cvArray);
+
+        } catch (OAuthConnectionException e) {
+
+            // Show a Toast message on the UI Thread.
+            Handler h = new Handler(getApplicationContext().getMainLooper());
+
+            h.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(
+                            getApplicationContext(),
+                            getString(R.string.error_oauth_exception),
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
+            });
+
+            Log.e(TAG, "Error retrieving response: " + e.getMessage());
         }
-
-        for (int i = 0; i < cv2.size(); i++) {
-            cvArray[x++] = cv2.get(i);
-        }
-
-        getApplicationContext().getContentResolver().bulkInsert(DataContract.RestaurantEntry.CONTENT_URI, cvArray);
-
 
     }
 
@@ -146,8 +170,14 @@ public class SearchService extends IntentService {
 
         List<ContentValues> cvList = new ArrayList<>();
 
+        // Check for null or empty string
+        if ((str == null) || (str.trim().length() == 0)) return cvList;
+
         try {
             JSONObject searchResults = new JSONObject(str);
+
+            // Does out string even have a business object?
+            if (!searchResults.has(JSON_BUSINESSES)) return cvList;
 
             JSONArray businesses = searchResults.getJSONArray(JSON_BUSINESSES);
 
@@ -159,7 +189,7 @@ public class SearchService extends IntentService {
                 try {
                     float rating = Float.parseFloat(ratingStr);
                     if (rating < minRating) continue;
-                } catch (NumberFormatException e)  {
+                } catch (NumberFormatException e) {
                     Log.e(TAG, "Invalid rating: " + ratingStr);
                 }
 
@@ -217,11 +247,13 @@ public class SearchService extends IntentService {
         return request;
     }
 
-    private String sendRequestAndGetResponse(OAuthRequest request) {
+    private String sendRequestAndGetResponse(OAuthRequest request) throws OAuthConnectionException {
         Log.i(TAG, "Querying " + request.getCompleteUrl() + " ...");
+
         this.service.signRequest(this.accessToken, request);
         Response response = request.send();
         return response.getBody();
+
     }
 
     public static void updateSearchResults(Activity activity) {
@@ -240,7 +272,7 @@ public class SearchService extends IntentService {
             latitude = prefs.getFloat(Constants.PREF_DEVICE_LATITUDE, 0f);
             longitude = prefs.getFloat(Constants.PREF_DEVICE_LONGITUDE, 0f);
 
-        } else  {
+        } else {
 
             latitude = prefs.getFloat(Constants.PREF_SPECIFIED_LATITUDE, 0f);
             longitude = prefs.getFloat(Constants.PREF_SPECIFIED_LONGITUDE, 0f);
