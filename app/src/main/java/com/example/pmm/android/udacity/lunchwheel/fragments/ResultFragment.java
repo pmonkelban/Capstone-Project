@@ -35,8 +35,6 @@ public class ResultFragment extends Fragment {
     private TextView mResultName;
     private TextView mResultUrl;
     private ImageView mResultImage;
-    private TextView mResultLat;
-    private TextView mResultLon;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -64,8 +62,6 @@ public class ResultFragment extends Fragment {
         mResultName = (TextView) view.findViewById(R.id.result_name);
         mResultUrl = (TextView) view.findViewById(R.id.result_url);
         mResultImage = (ImageView) view.findViewById(R.id.result_image);
-        mResultLon = (TextView) view.findViewById(R.id.result_lon);
-        mResultLat = (TextView) view.findViewById(R.id.result_lat);
 
         c.moveToFirst();
 
@@ -86,9 +82,6 @@ public class ResultFragment extends Fragment {
 
         mResultUrl.setOnClickListener(clickListener);
         mResultImage.setOnClickListener(clickListener);
-
-        mResultLon.setText(c.getString(DataProvider.RESTAURANT_INDEX_LON));
-        mResultLat.setText(c.getString(DataProvider.RESTAURANT_INDEX_LAT));
 
         String imageUrl = c.getString(DataProvider.RESTAURANT_INDEX_IMAGE);
 

@@ -24,11 +24,17 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
+        <!--<fragment-->
+            <!--android:id="@+id/result_map_fragment"-->
+            <!--android:name="com.example.pmm.android.udacity.lunchwheel.fragments.ResultMapFragment"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content" />-->
+
         <fragment
-            android:id="@+id/result_map_fragment"
-            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.ResultMapFragment"
+            android:id="@+id/result_map"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:name="com.google.android.gms.maps.MapFragment" />
 
     </LinearLayout>
 

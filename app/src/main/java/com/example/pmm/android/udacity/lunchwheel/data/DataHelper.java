@@ -23,7 +23,7 @@ public class DataHelper extends SQLiteOpenHelper {
                         DataContract.RestaurantEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                         DataContract.RestaurantEntry.COLUMN_URL + " TEXT, " +
                         DataContract.RestaurantEntry.COLUMN_IMAGE + " TEXT, " +
-                        DataContract.RestaurantEntry.COLUMN_COORD_LONG + " REAL, " +
+                        DataContract.RestaurantEntry.COLUMN_COORD_LON + " REAL, " +
                         DataContract.RestaurantEntry.COLUMN_COORD_LAT + " REAL)";
 
         db.execSQL(CREATE_RESTAURANT_TABLE);

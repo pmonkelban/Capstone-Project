@@ -8,6 +8,7 @@
     <string name="spin">Spin</string>
     <string name="route_to_restaurant">Route to restaurant</string>
     <string name="todays_lunch_is_at">Today\'s Lunch will be at...</string>
+    <string name="start">Start</string>
 
     <!--<string name="yelp_link_description"><a href="http://www.trivir.com">View on Yelp!</a></string>-->
     <string name="yelp_link_description">View on Yelp!</string>

@@ -147,8 +147,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showInterstitialAd() {
-//        mInterstitialAd.show();
-        doSpinWheel();
+
+        boolean debug = false;
+
+        if (debug) {
+            doSpinWheel();
+        } else {
+            mInterstitialAd.show();
+        }
     }
 
     private void doSpinWheel() {
@@ -173,14 +179,22 @@ public class MainActivity extends AppCompatActivity
 
         c.moveToPosition(randomPositon);
 
-//        String winner = getString(R.string.toast_announce_winner) +
-//                System.getProperty("line.separator") +
-//                c.getString(DataProvider.RESTAURANT_INDEX_NAME);
-//
-//        Toast.makeText(getApplicationContext(), winner, Toast.LENGTH_LONG).show();
-
         Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
         intent.putExtra(Constants.INTENT_RESULT_ID, c.getString(DataProvider.RESTAURANT_INDEX_ID));
+
+        /*
+        * Add the starting location to the intent.
+        * Check the location mode (either device or specified) and pull
+        * the preference accordingly.
+        */
+        if (Constants.PREF_LOCATION_MODE_DEVICE.equals(prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
+            intent.putExtra(Constants.INTENT_LONGITUDE, prefs.getFloat(Constants.PREF_DEVICE_LONGITUDE, 0f));
+            intent.putExtra(Constants.INTENT_LATITUDE, prefs.getFloat(Constants.PREF_DEVICE_LATITUDE, 0f));
+        } else {
+            intent.putExtra(Constants.INTENT_LONGITUDE, prefs.getFloat(Constants.PREF_SPECIFIED_LONGITUDE, 0f));
+            intent.putExtra(Constants.INTENT_LATITUDE, prefs.getFloat(Constants.PREF_SPECIFIED_LATITUDE, 0f));
+        }
+
         startActivity(intent);
 
     }

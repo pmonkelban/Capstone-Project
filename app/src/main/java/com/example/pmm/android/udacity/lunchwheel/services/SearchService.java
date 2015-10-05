@@ -218,11 +218,11 @@ public class SearchService extends IntentService {
                         o = o.getJSONObject(JSON_COORDINATE);
 
                         if (o.has(JSON_LAT)) {
-                            values.put(DataContract.RestaurantEntry.COLUMN_COORD_LONG, o.getString(JSON_LAT));
+                            values.put(DataContract.RestaurantEntry.COLUMN_COORD_LAT, o.getString(JSON_LAT));
                         }
 
                         if (o.has(JSON_LON)) {
-                            values.put(DataContract.RestaurantEntry.COLUMN_COORD_LAT, o.getString(JSON_LON));
+                            values.put(DataContract.RestaurantEntry.COLUMN_COORD_LON, o.getString(JSON_LON));
 
                         }
                     }
