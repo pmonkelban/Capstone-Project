@@ -1,9 +1,15 @@
 package com.example.pmm.android.udacity.lunchwheel.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.example.pmm.android.udacity.lunchwheel.Constants;
 import com.example.pmm.android.udacity.lunchwheel.R;
@@ -35,6 +41,8 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     boolean mMapReady = false;
     GoogleMap mGmap;
 
+    private MenuItem mShareMenuItem;
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -68,6 +76,23 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        mShareMenuItem = menu.findItem(R.id.item_share);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mShareMenuItem);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mShareActionProvider.setShareIntent(createShareTrackIntent());
+    }
+
+
+    @Override
     public void onMapReady(GoogleMap map)  {
         mMapReady = true;
         mGmap = map;
@@ -97,6 +122,22 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
                 .title(mResultName);
 
         mGmap.addMarker(endMarkerOptions);
+
+    }
+
+    protected Intent createShareTrackIntent() {
+
+        SharedPreferences prefs =
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        String shareMsg = "Meet me here for lunch:";
+
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, shareMsg);
+        shareIntent.setType("text/plain");
+
+        return shareIntent;
 
     }
 
