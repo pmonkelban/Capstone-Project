@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity
         mSpinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showInterstitialAd();
+                mInterstitialAd.show();
             }
         });
 
@@ -146,17 +146,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void showInterstitialAd() {
-
-        boolean debug = false;
-
-        if (debug) {
-            doSpinWheel();
-        } else {
-            mInterstitialAd.show();
-        }
-    }
-
     private void doSpinWheel() {
 
         Cursor c = getApplicationContext().getContentResolver().query(
@@ -166,7 +155,7 @@ public class MainActivity extends AppCompatActivity
                 null,
                 null);
 
-        if (c.getCount() == 0) {
+        if ((c == null) || (c.getCount() == 0)) {
             Toast.makeText(
                     getApplicationContext(),
                     getString(R.string.toast_no_results),

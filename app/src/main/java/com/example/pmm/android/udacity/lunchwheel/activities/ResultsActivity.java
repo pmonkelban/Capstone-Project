@@ -21,7 +21,6 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class ResultsActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -48,6 +47,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState)  {
 
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_result);
 
         Intent intent = getIntent();
@@ -65,10 +65,12 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
                 new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
                 null);
 
-        c.moveToFirst();
-        mEndLat = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LAT));
-        mEndLon = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LON));
-        mResultName = c.getString(DataProvider.RESTAURANT_INDEX_NAME);
+        if (c != null) {
+            c.moveToFirst();
+            mEndLat = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LAT));
+            mEndLon = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LON));
+            mResultName = c.getString(DataProvider.RESTAURANT_INDEX_NAME);
+        }
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.result_map);
         mapFragment.getMapAsync(this);
@@ -78,9 +80,11 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        mShareMenuItem = menu.findItem(R.id.item_share);
-        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mShareMenuItem);
+        getMenuInflater().inflate(R.menu.menu_results, menu);
 
+        mShareMenuItem = menu.findItem(R.id.action_share);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(mShareMenuItem);
+        mShareActionProvider.setShareIntent(createShareTrackIntent());
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -88,7 +92,6 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     @Override
     protected void onStart() {
         super.onStart();
-        mShareActionProvider.setShareIntent(createShareTrackIntent());
     }
 
 
