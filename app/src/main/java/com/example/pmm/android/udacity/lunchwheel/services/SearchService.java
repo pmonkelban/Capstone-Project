@@ -48,6 +48,11 @@ public class SearchService extends IntentService {
     private String TOKEN;
     private String TOKEN_SECRET;
 
+    private static final int SORT_BEST_MATCH = 0;
+    private static final int SORT_BY_DISTANCE = 1;
+    private static final int SORT_BY_RATING = 2;
+
+
     OAuthService service;
     Token accessToken;
 
@@ -99,7 +104,7 @@ public class SearchService extends IntentService {
             request1.addQuerystringParameter("ll", location);
             request1.addQuerystringParameter("limit", SEARCH_LIMIT);
             request1.addQuerystringParameter("radius_filter", String.valueOf(searchRadius));
-            request1.addQuerystringParameter("sort", String.valueOf(2));
+            request1.addQuerystringParameter("sort", String.valueOf(SORT_BEST_MATCH));
             String response1 = sendRequestAndGetResponse(request1);
 
             OAuthRequest request2 = createOAuthRequest(SEARCH_PATH);
@@ -107,7 +112,7 @@ public class SearchService extends IntentService {
             request2.addQuerystringParameter("ll", location);
             request2.addQuerystringParameter("limit", SEARCH_LIMIT);
             request2.addQuerystringParameter("radius_filter", String.valueOf(searchRadius));
-            request2.addQuerystringParameter("sort", String.valueOf(2));
+            request2.addQuerystringParameter("sort", String.valueOf(SORT_BEST_MATCH));
             request2.addQuerystringParameter("offset", String.valueOf(20));
             String response2 = sendRequestAndGetResponse(request2);
 
@@ -157,16 +162,22 @@ public class SearchService extends IntentService {
 
     private List<ContentValues> insertRestaurantEntriesFromJSON(String str, float minRating) {
 
+        // Containers
         final String JSON_BUSINESSES = "businesses";
         final String JSON_LOCATION = "location";
         final String JSON_COORDINATE = "coordinate";
+        final String JSON_ADDRESS = "display_address";
 
+        // Fields
         final String JSON_NAME = "name";
         final String JSON_URL = "mobile_url";
         final String JSON_IMAGE = "image_url";
         final String JSON_LAT = "latitude";
         final String JSON_LON = "longitude";
         final String JSON_RATING = "rating";
+        final String JSON_ADDR_LINE_1 = "0";
+        final String JSON_ADDR_LINE_2 = "1";
+        final String JSON_PHONE = "display_phone";
 
         List<ContentValues> cvList = new ArrayList<>();
 
@@ -209,20 +220,48 @@ public class SearchService extends IntentService {
                     values.put(DataContract.RestaurantEntry.COLUMN_IMAGE, json_business.getString(JSON_IMAGE));
                 }
 
-                JSONObject o;
+                if (json_business.has(JSON_PHONE)) {
+                    values.put(DataContract.RestaurantEntry.COLUMN_PHONE, json_business.getString(JSON_PHONE));
+                }
+
+                JSONObject json_location;
 
                 if (json_business.has(JSON_LOCATION)) {
-                    o = json_business.getJSONObject(JSON_LOCATION);
+                    json_location = json_business.getJSONObject(JSON_LOCATION);
 
-                    if (o.has(JSON_COORDINATE)) {
-                        o = o.getJSONObject(JSON_COORDINATE);
+                    /*
+                    * Get Address info.  Combine all address entries into a single
+                    * String separated by newlines.
+                    */
+                    if (json_location.has(JSON_ADDRESS)) {
+                        JSONArray json_address = json_location.getJSONArray(JSON_ADDRESS);
 
-                        if (o.has(JSON_LAT)) {
-                            values.put(DataContract.RestaurantEntry.COLUMN_COORD_LAT, o.getString(JSON_LAT));
+                        StringBuilder sb = new StringBuilder();
+
+                        for (int j = 0; j < json_address.length(); j++)  {
+                            if (sb.length() > 0)  {
+                                sb.append(System.getProperty("line.separator"));
+                            }
+                            sb.append(json_address.getString(j));
                         }
 
-                        if (o.has(JSON_LON)) {
-                            values.put(DataContract.RestaurantEntry.COLUMN_COORD_LON, o.getString(JSON_LON));
+                        values.put(DataContract.RestaurantEntry.COLUMN_ADDRESS, sb.toString());
+
+                    }
+
+                    /*
+                    * Get the GPS Coordinates
+                    */
+                    if (json_location.has(JSON_COORDINATE)) {
+
+                        JSONObject json_coordinate = json_location.getJSONObject(JSON_COORDINATE);
+
+                        if (json_coordinate.has(JSON_LAT)) {
+                            values.put(DataContract.RestaurantEntry.COLUMN_COORD_LAT, json_coordinate.getString(JSON_LAT));
+                        }
+
+                        if (json_coordinate.has(JSON_LON)) {
+                            values.put(DataContract.RestaurantEntry.COLUMN_COORD_LON, json_coordinate.getString(JSON_LON));
 
                         }
                     }
@@ -243,8 +282,7 @@ public class SearchService extends IntentService {
     }
 
     private OAuthRequest createOAuthRequest(String path) {
-        OAuthRequest request = new OAuthRequest(Verb.GET, "http://" + API_HOST + path);
-        return request;
+        return new OAuthRequest(Verb.GET, "http://" + API_HOST + path);
     }
 
     private String sendRequestAndGetResponse(OAuthRequest request) throws OAuthConnectionException {

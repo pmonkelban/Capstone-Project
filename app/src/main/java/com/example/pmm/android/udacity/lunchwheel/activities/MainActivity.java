@@ -228,6 +228,14 @@ public class MainActivity extends AppCompatActivity
 
         super.onStart();
         mGoogleApiClient.connect();
+
+        /*
+        * If the location is specified, then we don't need to wait for the google api client
+        * to connect.  Go ahead and update the location with the info we already have.
+        */
+        if (Constants.PREF_LOCATION_MODE_SPECIFY.equals(prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
+            updateLocation();
+        }
     }
 
     @Override
@@ -269,9 +277,6 @@ public class MainActivity extends AppCompatActivity
 
     private void updateLocation() {
 
-//        float old_lat = prefs.getFloat(Constants.PREF_DEVICE_LATITUDE, 0f);
-//        float old_lon = prefs.getFloat(Constants.PREF_DEVICE_LONGITUDE, 0f);
-
         float lon = (mLastDeviceLocation == null) ? 0f : (float) mLastDeviceLocation.getLongitude();
         float lat = (mLastDeviceLocation == null) ? 0f : (float) mLastDeviceLocation.getLatitude();
 
@@ -280,24 +285,23 @@ public class MainActivity extends AppCompatActivity
                 .putFloat(Constants.PREF_DEVICE_LONGITUDE, lon)
                 .commit();
 
-        if (Constants.PREF_LOCATION_MODE_DEVICE.equals(
-                prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
+        if (
+                (Constants.PREF_LOCATION_MODE_DEVICE.equals(prefs.getString(Constants.PREF_LOCATION_MODE, "")))
+                        && (mLastDeviceLocation == null)
+                ) {
 
-            if (mLastDeviceLocation == null) {
-                Toast.makeText(
-                        getApplicationContext(),
-                        getString(R.string.toast_no_device_location),
-                        Toast.LENGTH_LONG)
-                        .show();
-            } else {
+            Toast.makeText(
+                    getApplicationContext(),
+                    getString(R.string.toast_no_device_location),
+                    Toast.LENGTH_LONG)
+                    .show();
+        } else {
 
-//                if (Util.distance(old_lat, lat, old_lon, lon, 0d, 0d) > REFRESH_DISTANCE_METERS) {
-                SearchService.updateSearchResults(this);
-//                }
-            }
+//          if (Util.distance(old_lat, lat, old_lon, lon, 0d, 0d) > REFRESH_DISTANCE_METERS) {
+            SearchService.updateSearchResults(this);
+//          }
         }
     }
-
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {

@@ -18,7 +18,8 @@ public class DataProvider extends ContentProvider {
     public static final int RESTAURANT_INDEX_IMAGE = 3;
     public static final int RESTAURANT_INDEX_LON = 4;
     public static final int RESTAURANT_INDEX_LAT = 5;
-
+    public static final int RESTAURANT_INDEX_ADDRESS = 6;
+    public static final int RESTAURANT_INDEX_PHONE = 7;
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 

@@ -37,6 +37,9 @@ public class DataContract {
         public static final String COLUMN_IMAGE = "imageUrl";
         public static final String COLUMN_COORD_LON = "coord_long";
         public static final String COLUMN_COORD_LAT = "coord_lat";
+        public static final String COLUMN_ADDRESS = "address_1";
+        public static final String COLUMN_ADDR_2 = "address_2";
+        public static final String COLUMN_PHONE = "phone";
 
         public static Uri buildLRestaurantUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
