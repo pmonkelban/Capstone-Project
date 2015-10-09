@@ -148,43 +148,53 @@ public class MainActivity extends AppCompatActivity
 
     private void doSpinWheel() {
 
-        Cursor c = getApplicationContext().getContentResolver().query(
-                DataContract.RestaurantEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null);
+        Cursor c = null;
 
-        if ((c == null) || (c.getCount() == 0)) {
-            Toast.makeText(
-                    getApplicationContext(),
-                    getString(R.string.toast_no_results),
-                    Toast.LENGTH_SHORT)
-                    .show();
-            return;
-        }
+        try {
+            c = getApplicationContext().getContentResolver().query(
+                    DataContract.RestaurantEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null);
 
-        int randomPositon = rnd.nextInt(c.getCount());
+            if ((c == null) || (c.getCount() == 0)) {
+                Toast.makeText(
+                        getApplicationContext(),
+                        getString(R.string.toast_no_results),
+                        Toast.LENGTH_SHORT)
+                        .show();
+                return;
+            }
 
-        c.moveToPosition(randomPositon);
+            int randomPositon = rnd.nextInt(c.getCount());
 
-        Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
-        intent.putExtra(Constants.INTENT_RESULT_ID, c.getString(DataProvider.RESTAURANT_INDEX_ID));
+            c.moveToPosition(randomPositon);
+
+            Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+            intent.putExtra(Constants.INTENT_RESULT_ID, c.getString(DataProvider.RESTAURANT_INDEX_ID));
 
         /*
         * Add the starting location to the intent.
         * Check the location mode (either device or specified) and pull
         * the preference accordingly.
         */
-        if (Constants.PREF_LOCATION_MODE_DEVICE.equals(prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
-            intent.putExtra(Constants.INTENT_LONGITUDE, prefs.getFloat(Constants.PREF_DEVICE_LONGITUDE, 0f));
-            intent.putExtra(Constants.INTENT_LATITUDE, prefs.getFloat(Constants.PREF_DEVICE_LATITUDE, 0f));
-        } else {
-            intent.putExtra(Constants.INTENT_LONGITUDE, prefs.getFloat(Constants.PREF_SPECIFIED_LONGITUDE, 0f));
-            intent.putExtra(Constants.INTENT_LATITUDE, prefs.getFloat(Constants.PREF_SPECIFIED_LATITUDE, 0f));
-        }
+            if (Constants.PREF_LOCATION_MODE_DEVICE.equals(prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
+                intent.putExtra(Constants.INTENT_LONGITUDE, prefs.getFloat(Constants.PREF_DEVICE_LONGITUDE, 0f));
+                intent.putExtra(Constants.INTENT_LATITUDE, prefs.getFloat(Constants.PREF_DEVICE_LATITUDE, 0f));
+            } else {
+                intent.putExtra(Constants.INTENT_LONGITUDE, prefs.getFloat(Constants.PREF_SPECIFIED_LONGITUDE, 0f));
+                intent.putExtra(Constants.INTENT_LATITUDE, prefs.getFloat(Constants.PREF_SPECIFIED_LATITUDE, 0f));
+            }
 
-        startActivity(intent);
+            startActivity(intent);
+
+        } finally  {
+
+            if ((c != null) && (!c.isClosed()))  {
+                c.close();
+            }
+        }
 
     }
 

@@ -58,18 +58,28 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         final String RESULT_QUERY_WHERE_CLAUSE =
                 DataContract.RestaurantEntry.COLUMN_ID + " = ?";
 
-        Cursor c = getApplicationContext().getContentResolver().query(
-                DataContract.RestaurantEntry.CONTENT_URI,
-                null,
-                RESULT_QUERY_WHERE_CLAUSE,
-                new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
-                null);
+        Cursor c = null;
 
-        if (c != null) {
-            c.moveToFirst();
-            mEndLat = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LAT));
-            mEndLon = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LON));
-            mResultName = c.getString(DataProvider.RESTAURANT_INDEX_NAME);
+        try {
+            c = getApplicationContext().getContentResolver().query(
+                    DataContract.RestaurantEntry.CONTENT_URI,
+                    null,
+                    RESULT_QUERY_WHERE_CLAUSE,
+                    new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
+                    null);
+
+            if (c != null) {
+                c.moveToFirst();
+                mEndLat = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LAT));
+                mEndLon = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LON));
+                mResultName = c.getString(DataProvider.RESTAURANT_INDEX_NAME);
+            }
+
+        } finally  {
+
+            if ((c != null) && (!c.isClosed()))  {
+                c.close();
+            }
         }
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.result_map);

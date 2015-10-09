@@ -43,53 +43,64 @@ public class ResultFragment extends Fragment {
         final String RESULT_QUERY_WHERE_CLAUSE =
                 DataContract.RestaurantEntry.COLUMN_ID + " = ?";
 
-        Cursor c = getActivity().getApplicationContext().getContentResolver().query(
-                DataContract.RestaurantEntry.CONTENT_URI,
-                null,
-                RESULT_QUERY_WHERE_CLAUSE,
-                new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
-                null);
+        Cursor c = null;
 
-        mResultName = (TextView) view.findViewById(R.id.result_name);
-        mResultUrl = (TextView) view.findViewById(R.id.result_url);
-        mResultImage = (ImageView) view.findViewById(R.id.result_image);
-        mResultAddress1 = (TextView) view.findViewById(R.id.result_address);
-        mResultPhone = (TextView) view.findViewById(R.id.result_phone);
+        try {
+
+            c = getActivity().getApplicationContext().getContentResolver().query(
+                    DataContract.RestaurantEntry.CONTENT_URI,
+                    null,
+                    RESULT_QUERY_WHERE_CLAUSE,
+                    new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
+                    null);
+
+            mResultName = (TextView) view.findViewById(R.id.result_name);
+            mResultUrl = (TextView) view.findViewById(R.id.result_url);
+            mResultImage = (ImageView) view.findViewById(R.id.result_image);
+            mResultAddress1 = (TextView) view.findViewById(R.id.result_address);
+            mResultPhone = (TextView) view.findViewById(R.id.result_phone);
 
 
-        if (c != null) {
+            if (c != null) {
 
-            c.moveToFirst();
+                c.moveToFirst();
 
-            setTextOrDisappear(mResultName, c.getString(DataProvider.RESTAURANT_INDEX_NAME));
+                setTextOrDisappear(mResultName, c.getString(DataProvider.RESTAURANT_INDEX_NAME));
 
-            final String yelp_url = c.getString(DataProvider.RESTAURANT_INDEX_URL);
+                final String yelp_url = c.getString(DataProvider.RESTAURANT_INDEX_URL);
 
-            View.OnClickListener clickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.setData(Uri.parse(yelp_url));
-                    startActivity(intent);
+                View.OnClickListener clickListener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(yelp_url));
+                        startActivity(intent);
+                    }
+                };
+
+                mResultUrl.setOnClickListener(clickListener);
+                mResultImage.setOnClickListener(clickListener);
+
+                String imageUrl = c.getString(DataProvider.RESTAURANT_INDEX_IMAGE);
+
+                if ((imageUrl != null) && (imageUrl.trim().length() > 0)) {
+                    Picasso.with(getActivity().getApplicationContext())
+                            .load(imageUrl)
+                            .resize(
+                                    (int) getResources().getDimension(R.dimen.result_image_width),
+                                    (int) getResources().getDimension(R.dimen.result_image_height))
+                            .into(mResultImage);
                 }
-            };
 
-            mResultUrl.setOnClickListener(clickListener);
-            mResultImage.setOnClickListener(clickListener);
-
-            String imageUrl = c.getString(DataProvider.RESTAURANT_INDEX_IMAGE);
-
-            if ((imageUrl != null) && (imageUrl.trim().length() > 0)) {
-                Picasso.with(getActivity().getApplicationContext())
-                        .load(imageUrl)
-                        .resize(
-                                (int) getResources().getDimension(R.dimen.result_image_width),
-                                (int) getResources().getDimension(R.dimen.result_image_height))
-                        .into(mResultImage);
+                setTextOrDisappear(mResultAddress1, c.getString(DataProvider.RESTAURANT_INDEX_ADDRESS));
+                setTextOrDisappear(mResultPhone, c.getString(DataProvider.RESTAURANT_INDEX_PHONE));
             }
 
-            setTextOrDisappear(mResultAddress1, c.getString(DataProvider.RESTAURANT_INDEX_ADDRESS));
-            setTextOrDisappear(mResultPhone, c.getString(DataProvider.RESTAURANT_INDEX_PHONE));
+        } finally  {
+
+            if ((c != null) && (!c.isClosed()))  {
+                c.close();
+            }
         }
 
         return view;
