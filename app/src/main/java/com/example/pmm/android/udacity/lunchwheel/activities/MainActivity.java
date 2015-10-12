@@ -97,9 +97,6 @@ public class MainActivity extends AppCompatActivity
 
         rnd = new Random(System.currentTimeMillis());
 
-        /*
-        * Set the location mode to device if it hasn't been set yet.
-        */
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         setDefaultPreferences();

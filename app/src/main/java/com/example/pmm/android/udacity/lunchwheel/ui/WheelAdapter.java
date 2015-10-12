@@ -43,5 +43,6 @@ public class WheelAdapter extends CursorAdapter {
 
         viewHolder.name.setText(cursor.getString(DataProvider.RESTAURANT_INDEX_NAME));
 
+        super.notifyDataSetChanged();
     }
 }

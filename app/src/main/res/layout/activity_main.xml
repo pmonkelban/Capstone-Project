@@ -1,36 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:spinner="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <Button
+        android:id="@+id/spin_wheel_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        android:orientation="horizontal">
+        android:enabled="false"
+        android:text="@string/spin" />
 
-        <!--<ListView-->
-            <!--android:id="@+id/restaurants_listView"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:dividerHeight="2px"/>-->
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="fill_parent"
+    <com.example.pmm.android.udacity.lunchwheel.ui.SpinnerWheel
+        android:id="@+id/restaurants_listView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        spinner:diameter="20" />
 
-        <Button
-            android:id="@+id/spin_wheel_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="@string/spin" />
 
-    </LinearLayout>
 
 </LinearLayout>

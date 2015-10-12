@@ -1,0 +1,7 @@
+Allow passing in an array of colors.
+
+Set text color.
+
+Allow dragging to turn the wheel.  Flicking starts the wheel spinning.
+
+
