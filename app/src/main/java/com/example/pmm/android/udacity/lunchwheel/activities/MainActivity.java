@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.pmm.android.udacity.lunchwheel.Constants;
@@ -24,6 +23,7 @@ import com.example.pmm.android.udacity.lunchwheel.data.DataContract;
 import com.example.pmm.android.udacity.lunchwheel.data.DataProvider;
 import com.example.pmm.android.udacity.lunchwheel.services.SearchService;
 import com.example.pmm.android.udacity.lunchwheel.ui.WheelAdapter;
+import com.example.pmm.android.udacity.lunchwheel.ui.WheelView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity
 
     private Location mLastDeviceLocation;
 
-    private ListView mListView;
+    private WheelView mListView;
     private WheelAdapter mWheelAdapter;
     private Button mSpinButton;
 
@@ -114,9 +114,9 @@ public class MainActivity extends AppCompatActivity
             Log.i(TAG, "Using Single Panel Mode.");
         }
 
-        // Create a new Adapter and bind it to the ListView
+        // Create a new WheelAdapter and bind it to the ListView
         mWheelAdapter = new WheelAdapter(this, null, 0);
-        mListView = (ListView) findViewById(R.id.restaurants_listView);
+        mListView = (WheelView) findViewById(R.id.restaurants_listView);
         mListView.setAdapter(mWheelAdapter);
         getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null, this);
 

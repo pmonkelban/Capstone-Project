@@ -1,5 +1,5 @@
 <resources>
-    <declare-styleable name="SpinnerWheel">
+    <declare-styleable name="WheelView">
         <attr name="diameter" format="float" />
     </declare-styleable>
 </resources>
