@@ -122,6 +122,8 @@ public class WheelView extends AdapterView<CursorAdapter> {
     protected void onDraw(Canvas canvas)  {
 //        canvas.drawText("Hello World", 10f, 10f, mTextPaint);
 
+        if (names == null) return;
+
         float centerX = canvas.getWidth() / 2f;
         float centerY = canvas.getHeight() / 2f;
 

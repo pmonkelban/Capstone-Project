@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -49,13 +51,16 @@ public class MainActivity extends AppCompatActivity
 
     private Location mLastDeviceLocation;
 
-    private WheelView mListView;
+    private WheelView mWheelView;
     private WheelAdapter mWheelAdapter;
     private Button mSpinButton;
 
     public static final int RESTAURANT_LOADER_ID = 0;
 
     Random rnd;
+
+    Animation mRotateWheelAnimation;
+
 
 //    public static final double REFRESH_DISTANCE_METERS = 100d;
 
@@ -71,16 +76,38 @@ public class MainActivity extends AppCompatActivity
         mSpinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mInterstitialAd.show();
+
+                /*
+                * If the ad failed to load, then just spin the wheel.
+                */
+                if (mInterstitialAd.isLoaded())  {
+                    mInterstitialAd.show();
+                } else  {
+                    requestNewInterstitial();
+                    doSpinWheel();
+                }
+
             }
         });
 
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId(getString(R.string.interstitial_ad_id));
         mInterstitialAd.setAdListener(new AdListener() {
+
             @Override
             public void onAdLoaded() {
                 super.onAdLoaded();
+                mSpinButton.setEnabled(true);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode)  {
+                Log.e(TAG, "Ad failed to load.  errorCode="+errorCode);
+                super.onAdFailedToLoad(errorCode);
+
+                /*
+                * If the Ad failed to load, still allow the user to proceed.
+                */
                 mSpinButton.setEnabled(true);
             }
 
@@ -116,9 +143,12 @@ public class MainActivity extends AppCompatActivity
 
         // Create a new WheelAdapter and bind it to the ListView
         mWheelAdapter = new WheelAdapter(this, null, 0);
-        mListView = (WheelView) findViewById(R.id.restaurants_listView);
-        mListView.setAdapter(mWheelAdapter);
+        mWheelView = (WheelView) findViewById(R.id.restaurants_listView);
+        mWheelView.setAdapter(mWheelAdapter);
         getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null, this);
+
+        mRotateWheelAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_wheel);
+
 
     }
 
@@ -145,6 +175,8 @@ public class MainActivity extends AppCompatActivity
 
     private void doSpinWheel() {
 
+        mSpinButton.setEnabled(false);
+
         Cursor c = null;
 
         try {
@@ -168,7 +200,7 @@ public class MainActivity extends AppCompatActivity
 
             c.moveToPosition(randomPositon);
 
-            Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+            final Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
             intent.putExtra(Constants.INTENT_RESULT_ID, c.getString(DataProvider.RESTAURANT_INDEX_ID));
 
         /*
@@ -184,7 +216,24 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(Constants.INTENT_LATITUDE, prefs.getFloat(Constants.PREF_SPECIFIED_LATITUDE, 0f));
             }
 
-            startActivity(intent);
+            mRotateWheelAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            mWheelView.startAnimation(mRotateWheelAnimation);
 
         } finally  {
 
