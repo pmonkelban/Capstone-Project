@@ -38,8 +38,7 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity
         implements
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -135,7 +134,34 @@ public class MainActivity extends AppCompatActivity
         mWheelAdapter = new WheelAdapter(this, null, 0);
         mWheelView = (WheelView) findViewById(R.id.restaurants_listView);
         mWheelView.setAdapter(mWheelAdapter);
-        getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null, this);
+
+        getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null,
+                new LoaderManager.LoaderCallbacks<Cursor>() {
+
+                    @Override
+                    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+                        return new CursorLoader(MainActivity.this,
+                                DataContract.RestaurantEntry.CONTENT_URI,
+                                null,
+                                null,
+                                null,
+                                null);
+                    }
+
+                    @Override
+                    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+                        mWheelAdapter.swapCursor(data);
+                        mWheelAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onLoaderReset(Loader<Cursor> loader) {
+                        mWheelAdapter.swapCursor(null);
+                        mWheelAdapter.notifyDataSetChanged();
+                    }
+
+                });
 
         // Create animation to spin the wheel
         mRotateWheelAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_wheel);
@@ -357,25 +383,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this,
-                DataContract.RestaurantEntry.CONTENT_URI,
-                null,
-                null,
-                null,
-                null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mWheelAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        mWheelAdapter.swapCursor(null);
-    }
 
     private void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()

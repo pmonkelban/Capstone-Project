@@ -28,6 +28,7 @@ public class WheelAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
+
         View view = LayoutInflater.from(context).inflate(R.layout.wheel_item, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(view);

@@ -33,6 +33,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
     private int rotation = 0;
 
     private DataSetObserver observer = new DataSetObserver() {
+
         @Override
         public void onChanged() {
             super.onChanged();
@@ -55,7 +56,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
     private Paint mTextPaint;
     private Paint mTextPaint2;
 
-    public WheelView(Context context, AttributeSet attrs)  {
+    public WheelView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
         this.setWillNotDraw(false);
@@ -84,7 +85,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
         throw new UnsupportedOperationException("setSelection() Not Supported");
     }
 
-    private void updateData()  {
+    private void updateData() {
 
         names = new ArrayList<>();
 
@@ -93,19 +94,17 @@ public class WheelView extends AdapterView<CursorAdapter> {
         Cursor c = mAdapter.getCursor();
         if (c == null) return;
 
-        try  {
-            c.moveToFirst();
-            while (!c.isAfterLast())  {
-                names.add(c.getString(DataProvider.RESTAURANT_INDEX_NAME));
-                c.moveToNext();
-            }
-        } finally  {
-            c.close();
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            names.add(c.getString(DataProvider.RESTAURANT_INDEX_NAME));
+            c.moveToNext();
         }
+
+        invalidate();
 
     }
 
-    private void init()  {
+    private void init() {
 
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPaint.setColor(Color.BLUE);
@@ -119,17 +118,23 @@ public class WheelView extends AdapterView<CursorAdapter> {
 
     }
 
-    protected void onDraw(Canvas canvas)  {
-//        canvas.drawText("Hello World", 10f, 10f, mTextPaint);
+    protected void onDraw(Canvas canvas) {
 
-        if (names == null) return;
+        Log.d(TAG, "onDraw() called");
+
+        if (names == null) {
+            Log.d(TAG, "onDraw() names is null");
+            return;
+        }
+
+        Log.d(TAG, "onDraw() names.size=" + names.size());
 
         float centerX = canvas.getWidth() / 2f;
         float centerY = canvas.getHeight() / 2f;
 
         float rotDeltaDegrees = 360f / (float) names.size() / 2f;
 
-        for (int i = 0; i < names.size(); i++)  {
+        for (int i = 0; i < names.size(); i++) {
             canvas.drawLine(centerX, centerY, getWidth(), centerY, mTextPaint);
             canvas.rotate(rotDeltaDegrees, centerX, centerY);
 
@@ -147,7 +152,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event)  {
+    public boolean onTouchEvent(MotionEvent event) {
         Log.d(TAG, "onTouchEvent() event:" + event);
         return super.onTouchEvent(event);
 
@@ -163,7 +168,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec)  {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
         // Get the width measurement
         int widthSize = getMeasurement(widthMeasureSpec, getDesiredWidth());
@@ -202,7 +207,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
         return getDesiredHeight();
     }
 
-    private int getDesiredHeight()  {
+    private int getDesiredHeight() {
 
         int h = 0;
 

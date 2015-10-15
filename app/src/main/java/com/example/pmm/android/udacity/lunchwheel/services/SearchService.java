@@ -175,8 +175,6 @@ public class SearchService extends IntentService {
         final String JSON_LAT = "latitude";
         final String JSON_LON = "longitude";
         final String JSON_RATING = "rating";
-        final String JSON_ADDR_LINE_1 = "0";
-        final String JSON_ADDR_LINE_2 = "1";
         final String JSON_PHONE = "display_phone";
 
         List<ContentValues> cvList = new ArrayList<>();
