@@ -24,7 +24,7 @@ public class ResultFragment extends Fragment {
     private TextView mResultName;
     private TextView mResultUrl;
     private ImageView mResultImage;
-    private TextView mResultAddress1;
+    private TextView mResultAddress;
     private TextView mResultPhone;
 
     @Override
@@ -57,7 +57,7 @@ public class ResultFragment extends Fragment {
             mResultName = (TextView) view.findViewById(R.id.result_name);
             mResultUrl = (TextView) view.findViewById(R.id.result_url);
             mResultImage = (ImageView) view.findViewById(R.id.result_image);
-            mResultAddress1 = (TextView) view.findViewById(R.id.result_address);
+            mResultAddress = (TextView) view.findViewById(R.id.result_address);
             mResultPhone = (TextView) view.findViewById(R.id.result_phone);
 
 
@@ -92,7 +92,7 @@ public class ResultFragment extends Fragment {
                             .into(mResultImage);
                 }
 
-                setTextOrDisappear(mResultAddress1, c.getString(DataProvider.RESTAURANT_INDEX_ADDRESS));
+                setTextOrDisappear(mResultAddress, c.getString(DataProvider.RESTAURANT_INDEX_ADDRESS));
                 setTextOrDisappear(mResultPhone, c.getString(DataProvider.RESTAURANT_INDEX_PHONE));
             }
 

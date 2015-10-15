@@ -36,12 +36,16 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
     float mStartLon;
 
     String mResultName;
+    String mResultAddress;
+    String mResultPhone;
 
     boolean mMapReady = false;
     GoogleMap mGmap;
 
     private MenuItem mShareMenuItem;
     private ShareActionProvider mShareActionProvider;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)  {
@@ -73,6 +77,8 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
                 mEndLat = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LAT));
                 mEndLon = Float.valueOf(c.getString(DataProvider.RESTAURANT_INDEX_LON));
                 mResultName = c.getString(DataProvider.RESTAURANT_INDEX_NAME);
+                mResultAddress = c.getString(DataProvider.RESTAURANT_INDEX_ADDRESS);
+                mResultPhone = c.getString(DataProvider.RESTAURANT_INDEX_PHONE);
             }
 
         } finally  {
@@ -140,10 +146,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
 
     protected Intent createShareTrackIntent() {
 
-        SharedPreferences prefs =
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
-        String shareMsg = "Meet me here for lunch:";
+        String shareMsg = getString(R.string.share_text, mResultName, mResultAddress, mResultPhone);
 
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);

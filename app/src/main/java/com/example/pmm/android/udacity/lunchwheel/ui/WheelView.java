@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -54,7 +53,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
     private CursorAdapter mAdapter;
 
     private Paint mTextPaint;
-    private Paint mTextPaint2;
+    private Paint mBorderPaint;
 
     public WheelView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -114,9 +113,9 @@ public class WheelView extends AdapterView<CursorAdapter> {
         mTextPaint.setColor(Color.BLUE);
         mTextPaint.setTextSize(15f);
 
-        mTextPaint2 = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint2.setColor(Color.RED);
-        mTextPaint2.setTextSize(15f);
+        mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mBorderPaint.setColor(Color.BLACK);
+        mBorderPaint.setTextSize(15f);
 
         rotation = 0;
 
@@ -139,7 +138,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
         float rotDeltaDegrees = 360f / (float) names.size() / 2f;
 
         for (int i = 0; i < names.size(); i++) {
-            canvas.drawLine(centerX, centerY, getWidth(), centerY, mTextPaint);
+            canvas.drawLine(centerX, centerY, getWidth(), centerY, mBorderPaint);
             canvas.rotate(rotDeltaDegrees, centerX, centerY);
 
             float textLen = mTextPaint.measureText(names.get(i));
