@@ -148,7 +148,7 @@ public class WheelView extends AdapterView<CursorAdapter> {
 
     @Override
     public boolean onTouchEvent(MotionEvent event)  {
-        Log.d(TAG, "onTouchEvent()");
+        Log.d(TAG, "onTouchEvent() event:" + event);
         return super.onTouchEvent(event);
 
 //        new Handler().postDelayed(new Runnable()  {

@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity
 
     Animation mRotateWheelAnimation;
 
+    Intent mShowResultsIntent;
 
 //    public static final double REFRESH_DISTANCE_METERS = 100d;
 
@@ -76,17 +77,7 @@ public class MainActivity extends AppCompatActivity
         mSpinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*
-                * If the ad failed to load, then just spin the wheel.
-                */
-                if (mInterstitialAd.isLoaded())  {
-                    mInterstitialAd.show();
-                } else  {
-                    requestNewInterstitial();
-                    doSpinWheel();
-                }
-
+                doSpinWheel();
             }
         });
 
@@ -115,12 +106,11 @@ public class MainActivity extends AppCompatActivity
             public void onAdClosed() {
                 super.onAdClosed();
                 requestNewInterstitial();
-                doSpinWheel();
+                showResults();
             }
         });
 
         requestNewInterstitial();
-
 
         rnd = new Random(System.currentTimeMillis());
 
@@ -147,8 +137,30 @@ public class MainActivity extends AppCompatActivity
         mWheelView.setAdapter(mWheelAdapter);
         getLoaderManager().initLoader(RESTAURANT_LOADER_ID, null, this);
 
+        // Create animation to spin the wheel
         mRotateWheelAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_wheel);
 
+        mRotateWheelAnimation.setAnimationListener(new Animation.AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+                if (mInterstitialAd.isLoaded())  {
+                    mInterstitialAd.show();
+                } else  {
+                    requestNewInterstitial();
+                    showResults();
+                }
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
 
     }
 
@@ -173,9 +185,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void doSpinWheel() {
-
+    private void doSpinWheel()  {
         mSpinButton.setEnabled(false);
+        mWheelView.startAnimation(mRotateWheelAnimation);
+    }
+
+    private void showResults() {
 
         Cursor c = null;
 
@@ -200,7 +215,7 @@ public class MainActivity extends AppCompatActivity
 
             c.moveToPosition(randomPositon);
 
-            final Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
             intent.putExtra(Constants.INTENT_RESULT_ID, c.getString(DataProvider.RESTAURANT_INDEX_ID));
 
         /*
@@ -216,24 +231,7 @@ public class MainActivity extends AppCompatActivity
                 intent.putExtra(Constants.INTENT_LATITUDE, prefs.getFloat(Constants.PREF_SPECIFIED_LATITUDE, 0f));
             }
 
-            mRotateWheelAnimation.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
-            });
-
-            mWheelView.startAnimation(mRotateWheelAnimation);
+            startActivity(intent);
 
         } finally  {
 
