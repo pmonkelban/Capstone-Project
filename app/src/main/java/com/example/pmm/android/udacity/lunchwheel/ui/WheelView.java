@@ -7,17 +7,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Handler;
-import android.os.Looper;
+import android.support.v4.view.GestureDetectorCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 
-import com.example.pmm.android.udacity.lunchwheel.data.DataContract;
 import com.example.pmm.android.udacity.lunchwheel.data.DataProvider;
 
 import java.util.ArrayList;
@@ -47,6 +45,8 @@ public class WheelView extends AdapterView<CursorAdapter> {
         }
     };
 
+    GestureDetectorCompat mGestureDetector;
+
     List<String> names;
 
     public static final String TAG = WheelView.class.getCanonicalName();
@@ -72,6 +72,10 @@ public class WheelView extends AdapterView<CursorAdapter> {
         mAdapter = adapter;
         mAdapter.registerDataSetObserver(observer);
 
+    }
+
+    public void setGestureDetector(GestureDetectorCompat gestureDetector) {
+        this.mGestureDetector = gestureDetector;
     }
 
     @Override
@@ -154,17 +158,12 @@ public class WheelView extends AdapterView<CursorAdapter> {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         Log.d(TAG, "onTouchEvent() event:" + event);
-        return super.onTouchEvent(event);
 
-//        new Handler().postDelayed(new Runnable()  {
-//
-//            @Override
-//            public void run()  {
-//                rotation++;
-//
-//
-//            }
-//        }, 250);
+        if (mGestureDetector != null)  {
+            mGestureDetector.onTouchEvent(event);
+        }
+
+        return super.onTouchEvent(event);
     }
 
     @Override

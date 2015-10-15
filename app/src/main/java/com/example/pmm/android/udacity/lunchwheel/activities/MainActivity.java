@@ -1,6 +1,7 @@
 package com.example.pmm.android.udacity.lunchwheel.activities;
 
 import android.app.LoaderManager;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -11,8 +12,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -58,7 +61,11 @@ public class MainActivity extends AppCompatActivity
 
     Random rnd;
 
-    Animation mRotateWheelAnimation;
+    Animation mRotateWheelAnimationClockWise;
+    Animation mRotateWheelAnimationCounterClockWise;
+
+    private enum SPIN_DIR {CLOCKWISE, COUNTERCLOCKWISE};
+
 
     Intent mShowResultsIntent;
 
@@ -164,9 +171,7 @@ public class MainActivity extends AppCompatActivity
                 });
 
         // Create animation to spin the wheel
-        mRotateWheelAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate_wheel);
-
-        mRotateWheelAnimation.setAnimationListener(new Animation.AnimationListener() {
+        Animation.AnimationListener animationListener = new Animation.AnimationListener() {
 
             @Override
             public void onAnimationStart(Animation animation) {
@@ -175,9 +180,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                if (mInterstitialAd.isLoaded())  {
+                if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
-                } else  {
+                } else {
                     requestNewInterstitial();
                     showResults();
                 }
@@ -186,7 +191,16 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onAnimationRepeat(Animation animation) {
             }
-        });
+        };
+
+        mRotateWheelAnimationClockWise = AnimationUtils.loadAnimation(this, R.anim.rotate_wheel_cw);
+        mRotateWheelAnimationClockWise.setAnimationListener(animationListener);
+        mRotateWheelAnimationCounterClockWise = AnimationUtils.loadAnimation(this, R.anim.rotate_wheel_ccw);
+        mRotateWheelAnimationCounterClockWise.setAnimationListener(animationListener);
+
+        // Add a gesture detector to detect whent he user spins the wheel
+
+        mWheelView.setOnTouchListener(new OnSwipeTouchListener(this));
 
     }
 
@@ -213,7 +227,13 @@ public class MainActivity extends AppCompatActivity
 
     private void doSpinWheel()  {
         mSpinButton.setEnabled(false);
-        mWheelView.startAnimation(mRotateWheelAnimation);
+
+        if (rnd.nextBoolean()) {
+            mWheelView.startAnimation(mRotateWheelAnimationClockWise);
+        } else  {
+            mWheelView.startAnimation(mRotateWheelAnimationCounterClockWise);
+        }
+
     }
 
     private void showResults() {
@@ -390,5 +410,33 @@ public class MainActivity extends AppCompatActivity
                 .build();
 
         mInterstitialAd.loadAd(adRequest);
+    }
+
+    class OnSwipeTouchListener implements View.OnTouchListener {
+
+        private GestureDetector gestureDetector;
+
+        public OnSwipeTouchListener(Context context) {
+            gestureDetector = new GestureDetector(context, new GestureListener());
+        }
+
+        public boolean onTouch(final View view, final MotionEvent motionEvent) {
+            return gestureDetector.onTouchEvent(motionEvent);
+        }
+
+        private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                doSpinWheel();
+                return true;
+            }
+        }
+
     }
 }
