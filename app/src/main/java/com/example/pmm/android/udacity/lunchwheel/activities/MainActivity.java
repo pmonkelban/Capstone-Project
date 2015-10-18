@@ -291,13 +291,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
 
-        if (!mIsTwoPanel) {
-            // Inflate the menu; this adds items to the action bar if it is present.
-            getMenuInflater().inflate(R.menu.menu_main, menu);
-        }
-
-        return true;
+//        if (!mIsTwoPanel) {
+//            // Inflate the menu; this adds items to the action bar if it is present.
+//            getMenuInflater().inflate(R.menu.menu_main, menu);
+//        }
+//
+//        return true;
     }
 
 
