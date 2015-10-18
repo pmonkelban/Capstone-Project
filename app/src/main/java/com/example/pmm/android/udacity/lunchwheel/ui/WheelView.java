@@ -29,6 +29,13 @@ public class WheelView extends AdapterView<CursorAdapter> {
 
     private int rotation = 0;
 
+    /*
+    * TODO: Max length should be based on the space available, not the number of characters.
+    */
+    public static final int MAX_NAME_LENGTH = 20;
+
+    private final Rect mTextBounds = new Rect();
+
     private DataSetObserver observer = new DataSetObserver() {
 
         @Override
@@ -99,7 +106,11 @@ public class WheelView extends AdapterView<CursorAdapter> {
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            names.add(c.getString(DataProvider.RESTAURANT_INDEX_NAME));
+            String name = c.getString(DataProvider.RESTAURANT_INDEX_NAME);
+            if (name.length() > MAX_NAME_LENGTH)  {
+                name = name.substring(0, MAX_NAME_LENGTH) + "...";
+            }
+            names.add(name);
             c.moveToNext();
         }
 
@@ -145,9 +156,9 @@ public class WheelView extends AdapterView<CursorAdapter> {
             float textStartX = getWidth() - OUTER_PADDING - textLen;
             textStartX = Math.max(textStartX, centerX + INNER_PADDING);
 
-            Rect bounds = new Rect();
-            mTextPaint.getTextBounds(names.get(i), 0, names.get(i).length(), bounds);
-            canvas.drawText(names.get(i), textStartX, centerY, mTextPaint);
+
+            mTextPaint.getTextBounds(names.get(i), 0, names.get(i).length(), mTextBounds);
+            canvas.drawText(names.get(i), textStartX, centerY - mTextBounds.exactCenterY(), mTextPaint);
 
             canvas.rotate(rotDeltaDegrees, centerX, centerY);
         }
