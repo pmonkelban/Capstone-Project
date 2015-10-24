@@ -26,7 +26,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/app_name"
+                    android:contentDescription="@string/desc_logo"
                     android:padding="@dimen/padding_md"
                     android:src="@drawable/logo" />
 
@@ -89,6 +89,7 @@
 
                 <com.example.pmm.android.udacity.lunchwheel.ui.WheelView
                     android:id="@+id/restaurants_listView"
+                    android:contentDescription="@string/desc_wheel"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
@@ -97,6 +98,7 @@
 
                 <Button
                     android:id="@+id/spin_wheel_button"
+                    android:contentDescription="@string/desc_spinButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

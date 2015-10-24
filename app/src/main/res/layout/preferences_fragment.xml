@@ -18,6 +18,7 @@
 
         <SeekBar
             android:id="@+id/max_distance_slider"
+            android:contentDescription="@string/desc_MaxDistanceSlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -43,6 +44,7 @@
 
         <SeekBar
             android:id="@+id/min_rating_slider"
+            android:contentDescription="@string/desc_MinRatindSlider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -56,6 +58,7 @@
 
     <Button
         android:id="@+id/save_preferences"
+        android:contentDescription="@string/desc_SavePreferencesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

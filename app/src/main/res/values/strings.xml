@@ -56,4 +56,24 @@
     <!-- IO Errors -->
     <string name="error_oauth_exception">Error retrieving data.  Check network connection.</string>
 
+    <!-- Content Descriptions -->
+    <string name="desc_logo">LunchWheel logo</string>
+    <string name="desc_wheel">LunchWheel.  Fling to spin</string>
+    <string name="desc_spinButton">Spin Button</string>
+    <string name="desc_resultImage">Result Image</string>
+
+    <string name="desc_UseDeviceLocationRadioButton">Use Device Location radio button</string>
+    <string name="desc_SpecifyLocationRadioButton">Specify Device radio button</string>
+    <string name="desc_EnterCity">Enter City</string>
+    <string name="desc_EnterState">Enter State</string>
+    <string name="desc_EnterZip">Enter Zipcode</string>
+    <string name="desc_SaveLocationButton">Update Location button</string>
+    <string name="desc_MaxDistanceSlider">Maximum Distance Slide Bar</string>
+    <string name="desc_MinRatindSlider">Minimum Rating Slide Bar</string>
+    <string name="desc_SavePreferencesButton">Save Preferences button</string>
+
+
+    <string name="desc_"></string>
+
+
 </resources>

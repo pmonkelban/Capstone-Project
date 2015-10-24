@@ -13,12 +13,14 @@
 
         <RadioButton
             android:id="@+id/use_device_location_button"
+            android:contentDescription="@string/desc_UseDeviceLocationRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/use_device_location" />
 
         <RadioButton
             android:id="@+id/specify_location_button"
+            android:contentDescription="@string/desc_SpecifyLocationRadioButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/specify_location" />
@@ -39,6 +41,7 @@
 
         <EditText
             android:id="@+id/city_editText"
+            android:contentDescription="@string/desc_EnterCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -50,6 +53,7 @@
 
         <EditText
             android:id="@+id/state_editText"
+            android:contentDescription="@string/desc_EnterState"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -61,11 +65,13 @@
 
         <EditText
             android:id="@+id/zip_editText"
+            android:contentDescription="@string/desc_EnterZip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Button
             android:id="@+id/lookup_address_button"
+            android:contentDescription="@string/desc_SaveLocationButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
