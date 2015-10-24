@@ -94,6 +94,20 @@ public class ResultFragment extends Fragment {
 
                 setTextOrDisappear(mResultAddress, c.getString(DataProvider.RESTAURANT_INDEX_ADDRESS));
                 setTextOrDisappear(mResultPhone, c.getString(DataProvider.RESTAURANT_INDEX_PHONE));
+
+                /*
+                * Bring up the phone dialer if the number is clicked.
+                */
+                mResultPhone.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + mResultPhone.getText()));
+                        startActivity(intent);
+                    }
+                });
+
             }
 
         } finally  {
