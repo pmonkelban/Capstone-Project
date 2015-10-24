@@ -17,7 +17,7 @@
     </string>
 
     <!--<string name="yelp_link_description"><a href="http://www.trivir.com">View on Yelp!</a></string>-->
-    <string name="yelp_link_description">View on Yelp!</string>
+    <string name="yelp_link_description">Click here to view on Yelp!</string>
 
     <!-- Menu Items -->
     <string name="action_location">Location</string>
@@ -71,9 +71,5 @@
     <string name="desc_MaxDistanceSlider">Maximum Distance Slide Bar</string>
     <string name="desc_MinRatindSlider">Minimum Rating Slide Bar</string>
     <string name="desc_SavePreferencesButton">Save Preferences button</string>
-
-
-    <string name="desc_"></string>
-
 
 </resources>

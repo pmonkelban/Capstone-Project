@@ -1,59 +1,32 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="LunchWheelTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="android:textColor">@android:color/black</item>
         <item name="android:colorBackground">@color/blue_100</item>
         <item name="android:fontFamily">sans-serif-condensed</item>
 
-        <item name="colorPrimary">@color/blue_800</item>
+        <item name="colorPrimary">@color/blue_400</item>
         <item name="colorPrimaryDark">@color/blue_900</item>
         <item name="colorAccent">@color/blue_500</item>
 
         <item name="android:textColorLink">@color/blue_900</item>
 
-        <item name="android:actionMenuTextAppearance">@style/MyActionBar.MenuTextStyle</item>
+        <item name="android:actionMenuTextAppearance">@style/LunchWheelTheme.MenuTextStyle</item>
 
     </style>
 
-    <style name="ThemeOverlay.WheelMenuTheme" parent="AppTheme">
+    <style name="LunchWheelTheme.Menu" parent="LunchWheelTheme">
         <item name="android:colorBackground">@color/blue_600</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
-    <style name="AppTheme.Title" parent="AppTheme">
-        <item name="android:textSize">14sp</item>
-        <item name="android:layout_gravity">top</item>
-        <item name="android:textStyle">bold</item>
+    <style name="LunchWheelTheme.Link" parent="LunchWheelTheme">
+        <item name="android:textColor">@color/blue_700</item>
     </style>
 
-    <style name="AppTheme.SubTitle" parent="AppTheme">
-        <item name="android:textSize">10sp</item>
-        <item name="android:layout_gravity">bottom</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="AppTheme.DetailTitle" parent="AppTheme">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textSize">32sp</item>
-    </style>
-
-    <style name="AppTheme.DetailSubTitle" parent="AppTheme">
-        <item name="android:textSize">12sp</item>
-        <item name="android:layout_gravity">bottom</item>
-        <item name="android:textStyle">normal</item>
-    </style>
-
-    <style name="AppTheme.BodyText" parent="AppTheme">
-        <item name="android:colorBackground">@color/blue_100</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/grey_200</item>
-        <item name="android:lineSpacingMultiplier">1</item>
-    </style>
-
-    <style name="MyActionBar.MenuTextStyle"
+    <style name="LunchWheelTheme.MenuTextStyle"
         parent="android:style/TextAppearance.Holo.Widget.ActionBar.Menu">
         <item name="android:colorBackground">@color/blue_900</item>
         <item name="android:textColor">@color/white</item>

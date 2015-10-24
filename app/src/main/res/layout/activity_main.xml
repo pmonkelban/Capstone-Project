@@ -17,9 +17,9 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/main_toolbar"
+                style="@style/LunchWheelTheme.MenuTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                style="@style/MyActionBar.MenuTextStyle"
                 app:layout_collapseMode="pin">
 
                 <ImageView
@@ -44,27 +44,31 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/padding_lg"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/padding_lg">
 
             <com.example.pmm.android.udacity.lunchwheel.ui.WheelView
                 android:id="@+id/restaurants_listView"
-                android:contentDescription="@string/desc_wheel"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/padding_md"
+                android:layout_weight="1"
+                android:contentDescription="@string/desc_wheel"
                 spinner:diameter="20" />
 
             <Button
                 android:id="@+id/spin_wheel_button"
-                android:contentDescription="@string/desc_spinButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginTop="25dp"
+                android:background="@color/blue_400"
+                android:contentDescription="@string/desc_spinButton"
                 android:enabled="false"
-                android:text="@string/spin" />
+                android:padding="@dimen/padding_sm"
+                android:text="@string/spin"
+                android:textColor="@color/black" />
 
         </LinearLayout>
 
