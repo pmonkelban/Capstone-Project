@@ -10,4 +10,5 @@
     <dimen name="padding_md">4dp</dimen>
     <dimen name="padding_lg">6dp</dimen>
 
+    <dimen name="app_bar_height">75dp</dimen>
 </resources>

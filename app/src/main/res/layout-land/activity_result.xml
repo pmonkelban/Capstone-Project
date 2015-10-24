@@ -6,7 +6,7 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="75dp">
+        android:layout_height="@dimen/app_bar_height">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar_layout"
@@ -44,27 +44,27 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:padding="@dimen/padding_lg">
 
                 <fragment
                     android:id="@+id/result_fragment"
                     android:name="com.example.pmm.android.udacity.lunchwheel.fragments.ResultFragment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"  />
+                    android:layout_height="match_parent" />
 
             </FrameLayout>
 
             <FrameLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="500dp"
+                android:layout_height="match_parent"
                 android:padding="@dimen/padding_lg">
 
                 <fragment

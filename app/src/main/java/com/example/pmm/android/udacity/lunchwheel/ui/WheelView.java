@@ -146,16 +146,19 @@ public class WheelView extends AdapterView<CursorAdapter> {
         float centerX = canvas.getWidth() / 2f;
         float centerY = canvas.getHeight() / 2f;
 
+        float minDimension = Math.min(canvas.getWidth(), canvas.getHeight());
+
+        float radius = minDimension / 2f;
+
         float rotDeltaDegrees = 360f / (float) names.size() / 2f;
 
         for (int i = 0; i < names.size(); i++) {
-            canvas.drawLine(centerX, centerY, getWidth(), centerY, mBorderPaint);
+            canvas.drawLine(centerX, centerY, (centerX + radius), centerY, mBorderPaint);
             canvas.rotate(rotDeltaDegrees, centerX, centerY);
 
             float textLen = mTextPaint.measureText(names.get(i));
-            float textStartX = getWidth() - OUTER_PADDING - textLen;
+            float textStartX = (centerX + radius) - OUTER_PADDING - textLen;
             textStartX = Math.max(textStartX, centerX + INNER_PADDING);
-
 
             mTextPaint.getTextBounds(names.get(i), 0, names.get(i).length(), mTextBounds);
             canvas.drawText(names.get(i), textStartX, centerY - mTextBounds.exactCenterY(), mTextPaint);
