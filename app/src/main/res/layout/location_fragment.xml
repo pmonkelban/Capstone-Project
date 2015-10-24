@@ -8,7 +8,8 @@
     <RadioGroup
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="@dimen/padding_lg">
 
         <RadioButton
             android:id="@+id/use_device_location_button"
@@ -33,6 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_lg"
             android:text="@string/city" />
 
         <EditText
@@ -43,6 +45,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_lg"
             android:text="@string/state" />
 
         <EditText
@@ -53,6 +56,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_lg"
             android:text="@string/zip" />
 
         <EditText
