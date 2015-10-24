@@ -27,7 +27,7 @@
     <!-- Fetch latitude and longitude from the given address -->
     <string name="use_device_location">Use Device Location</string>
     <string name="specify_location">Manually Specify Location</string>
-    <string name="lookup_address">Lookup Address</string>
+    <string name="update_location">Update Location</string>
     <string name="error_no_location_data">Error.  No location data found</string>
     <string name="error_no_address_data">Error.  No address data found</string>
     <string name="error_address_lookup_unavailable">Error.  Address Look-Up Service Unavailable</string>

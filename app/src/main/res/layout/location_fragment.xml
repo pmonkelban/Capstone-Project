@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/padding_lg"
     android:orientation="vertical">
 
     <RadioGroup
@@ -63,7 +64,8 @@
             android:id="@+id/lookup_address_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/lookup_address" />
+            android:layout_gravity="right"
+            android:text="@string/update_location" />
 
     </LinearLayout>
 

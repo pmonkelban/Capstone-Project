@@ -23,6 +23,9 @@
     https://www.google.com/design/spec/style/color.html#color-color-palette
     Deep Orange
     -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
     <color name="orange_50">#FBE9E7</color>
     <color name="orange_100">#FFCCBC</color>
     <color name="orange_200">#FFAB91</color>

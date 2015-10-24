@@ -16,8 +16,10 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <android.support.v7.widget.Toolbar
+                android:id="@+id/main_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
+                android:popupTheme="@style/ThemeOverlay.WheelMenuTheme"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_collapseMode="pin">
 
@@ -37,34 +39,13 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:spinner="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <fragment
-                    android:id="@+id/set_location_fragment"
-                    android:name="com.example.pmm.android.udacity.lunchwheel.fragments.LocationFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <fragment
-                    android:id="@+id/set_location_frame"
-                    android:name="com.example.pmm.android.udacity.lunchwheel.fragments.PreferencesFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -72,17 +53,53 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <fragment
+                            android:id="@+id/set_location_fragment"
+                            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.LocationFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <fragment
+                            android:id="@+id/set_location_frame"
+                            android:name="com.example.pmm.android.udacity.lunchwheel.fragments.PreferencesFragment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+                </ScrollView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_lg">
+
                 <com.example.pmm.android.udacity.lunchwheel.ui.WheelView
                     android:id="@+id/restaurants_listView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
                     android:layout_gravity="center_horizontal"
                     spinner:diameter="20" />
 
                 <Button
                     android:id="@+id/spin_wheel_button"
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:enabled="false"
                     android:text="@string/spin" />
 

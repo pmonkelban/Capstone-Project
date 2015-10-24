@@ -21,6 +21,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.example.pmm.android.udacity.lunchwheel.Constants;
 import com.example.pmm.android.udacity.lunchwheel.R;
@@ -78,6 +79,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(false);
 
         mSpinButton = (Button) findViewById(R.id.spin_wheel_button);
         mSpinButton.setOnClickListener(new View.OnClickListener() {
@@ -291,7 +296,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        return super.onCreateOptionsMenu(menu);
 
         if (!mIsTwoPanel) {
             // Inflate the menu; this adds items to the action bar if it is present.
