@@ -9,6 +9,10 @@ import android.support.annotation.NonNull;
 
 import com.example.pmm.android.udacity.lunchwheel.data.DataProvider;
 
+/*
+* The code in this class was taken from Udacity's Advanced Android App Development.
+* Building a Total Experience / Get Read (Data).
+*/
 public class WidgetProvider extends AppWidgetProvider {
 
     private static final String TAG = WidgetProvider.class.getCanonicalName();

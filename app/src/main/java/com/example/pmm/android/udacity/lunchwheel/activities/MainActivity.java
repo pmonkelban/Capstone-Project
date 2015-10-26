@@ -53,28 +53,27 @@ public class MainActivity extends AppCompatActivity
 
     private GoogleApiClient mGoogleApiClient;
 
+    // Stores the device's last know location
     private Location mLastDeviceLocation;
 
     private WheelView mWheelView;
     private WheelAdapter mWheelAdapter;
+
     private Button mSpinButton;
 
+    // Identifier for the restaurant loader;
     public static final int RESTAURANT_LOADER_ID = 0;
 
     Random rnd;
 
+    /*
+    * Animations that will rotate the LunchWheel
+    * either clockwise or counter clockwise.
+    */
     Animation mRotateWheelAnimationClockWise;
     Animation mRotateWheelAnimationCounterClockWise;
 
-    private enum SPIN_DIR {CLOCKWISE, COUNTERCLOCKWISE}
-
-    ;
-
-
-    Intent mShowResultsIntent;
-
-//    public static final double REFRESH_DISTANCE_METERS = 100d;
-
+    // Add to display between spin and result.
     InterstitialAd mInterstitialAd;
 
     @Override
@@ -101,13 +100,20 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onAdLoaded() {
+
+                /*
+                * The Spin button is disabled by default.  When the ad is loaded,
+                * we enable the button.
+                */
                 super.onAdLoaded();
                 mSpinButton.setEnabled(true);
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
+
                 Log.e(TAG, "Ad failed to load.  errorCode=" + errorCode);
+
                 super.onAdFailedToLoad(errorCode);
 
                 /*
@@ -118,6 +124,11 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onAdClosed() {
+
+                /*
+                * When the Ad is closed, start the request for the next one,
+                * and proceed to showing the results.
+                */
                 super.onAdClosed();
                 requestNewInterstitial();
                 showResults();
@@ -130,8 +141,15 @@ public class MainActivity extends AppCompatActivity
 
         prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
+        /*
+        * Sets default values for max distance and min rating.
+        */
         setDefaultPreferences();
 
+        /*
+        * Start the GoogleAPI client.
+        * We'll use this to get the user's current location.
+        */
         mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -156,6 +174,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
+                        // All the entries from the restaurant table.
                         return new CursorLoader(MainActivity.this,
                                 DataContract.RestaurantEntry.CONTENT_URI,
                                 null,
@@ -188,6 +207,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onAnimationEnd(Animation animation) {
 
+                /*
+                * When the wheel stops spinning, show the ad.
+                */
                 if (mInterstitialAd.isLoaded()) {
                     mInterstitialAd.show();
                 } else {
@@ -201,22 +223,32 @@ public class MainActivity extends AppCompatActivity
             }
         };
 
-        mRotateWheelAnimationClockWise = AnimationUtils.loadAnimation(this, R.anim.rotate_wheel_cw);
+        mRotateWheelAnimationClockWise =
+                AnimationUtils.loadAnimation(this, R.anim.rotate_wheel_cw);
+
         mRotateWheelAnimationClockWise.setAnimationListener(animationListener);
-        mRotateWheelAnimationCounterClockWise = AnimationUtils.loadAnimation(this, R.anim.rotate_wheel_ccw);
+
+        mRotateWheelAnimationCounterClockWise =
+                AnimationUtils.loadAnimation(this, R.anim.rotate_wheel_ccw);
+
         mRotateWheelAnimationCounterClockWise.setAnimationListener(animationListener);
 
-        // Add a gesture detector to detect whent he user spins the wheel
-
+        // Add a gesture detector to detect when the user spins the wheel
         mWheelView.setOnTouchListener(new OnSwipeTouchListener(this));
 
     }
 
+    /*
+    * Sets default values for location mode, location, max distance, and min rating.
+    */
     private void setDefaultPreferences() {
 
         if (!prefs.contains(Constants.PREF_LOCATION_MODE)) {
             prefs.edit()
-                    .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_DEVICE)
+                    .putString(Constants.PREF_LOCATION_MODE, Constants.PREF_LOCATION_MODE_SPECIFY)
+                    .putString(Constants.PREF_CITY, getString(R.string.default_city))
+                    .putString(Constants.PREF_STATE, getString(R.string.default_state))
+                    .putString(Constants.PREF_ZIP, getString(R.string.default_zip))
                     .commit();
         }
 
@@ -295,7 +327,7 @@ public class MainActivity extends AppCompatActivity
             getApplicationContext().getContentResolver().update(
                     DataContract.RestaurantEntry.CONTENT_URI,
                     values,
-                    DataContract.RestaurantEntry.COLUMN_ID + "=?",
+                    DataContract.RestaurantEntry.COLUMN_ID + "= ?",
                     new String[]{c.getString(DataProvider.RESTAURANT_INDEX_ID)}
             );
 
@@ -370,7 +402,8 @@ public class MainActivity extends AppCompatActivity
         * If the location is specified, then we don't need to wait for the google api client
         * to connect.  Go ahead and update the location with the info we already have.
         */
-        if (Constants.PREF_LOCATION_MODE_SPECIFY.equals(prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
+        if (Constants.PREF_LOCATION_MODE_SPECIFY.
+                equals(prefs.getString(Constants.PREF_LOCATION_MODE, ""))) {
             updateLocation();
         }
     }
@@ -434,9 +467,7 @@ public class MainActivity extends AppCompatActivity
                     .show();
         } else {
 
-//          if (Util.distance(old_lat, lat, old_lon, lon, 0d, 0d) > REFRESH_DISTANCE_METERS) {
             SearchService.updateSearchResults(this);
-//          }
         }
     }
 
@@ -449,6 +480,9 @@ public class MainActivity extends AppCompatActivity
         mInterstitialAd.loadAd(adRequest);
     }
 
+    /*
+    * Listens for "fling" events and starts the wheel spinning.
+    */
     class OnSwipeTouchListener implements View.OnTouchListener {
 
         private GestureDetector gestureDetector;

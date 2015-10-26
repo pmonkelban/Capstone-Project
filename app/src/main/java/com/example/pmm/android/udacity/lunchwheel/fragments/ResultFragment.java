@@ -51,6 +51,14 @@ public class ResultFragment extends Fragment {
 
         try {
 
+            /*
+            * If ResultFragment was called from the MainActivity, then we'll have an intent
+            * with the result id in it, so use that to look up the winning restaurant.
+            * If the ResultFragment was called from elsewhere (i.e. the widget), then
+            * we'll look up the winner from the database.
+            * Trying to look up the winner from the database when called from MainActivity
+            * has caused errors if the database hasn't been updated yet.
+            */
             if (intent.hasExtra(Constants.INTENT_RESULT_ID)) {
 
                 c = getActivity().getApplicationContext().getContentResolver().query(
@@ -138,6 +146,10 @@ public class ResultFragment extends Fragment {
 
     }
 
+    /*
+    * If the string is not empty, then it sets the TextView's value to the string.
+    * If string is empty (or null), then set the TextView's visibiltiy to gone.
+    */
     private static boolean setTextOrDisappear(TextView v, String s)  {
 
         if ((s == null) || (s.trim().length() == 0))  {

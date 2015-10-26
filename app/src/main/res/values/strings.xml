@@ -48,6 +48,10 @@
     <string name="save_preferences">Save Preferences</string>
     <string name="preferences_saved">Preferences Saved</string>
 
+    <string name="default_city">Buffalo</string>
+    <string name="default_state">NY</string>
+    <string name="default_zip">14226</string>
+
 
     <string name="content_authority">com.example.pmm.android.udacity.lunchwheel</string>
 

@@ -49,8 +49,8 @@ public class SearchService extends IntentService {
     private String TOKEN_SECRET;
 
     private static final int SORT_BEST_MATCH = 0;
-    private static final int SORT_BY_DISTANCE = 1;
-    private static final int SORT_BY_RATING = 2;
+    private static final int SORT_BY_DISTANCE = 1; // Future
+    private static final int SORT_BY_RATING = 2; // Future
 
 
     OAuthService service;

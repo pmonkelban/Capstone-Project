@@ -31,7 +31,6 @@ public class DataProvider extends ContentProvider {
     private DataHelper mDataHelper;
 
     static final int RESTAURANT = 100;
-    static final int RESET_SELECTED = 200;
 
     static UriMatcher buildUriMatcher()  {
 

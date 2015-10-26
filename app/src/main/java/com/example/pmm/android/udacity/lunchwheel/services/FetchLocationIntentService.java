@@ -45,7 +45,7 @@ public class FetchLocationIntentService extends IntentService {
         if ((address == null) || (address.trim().length() == 0))  {
             errorMessage = getString(R.string.error_no_location_data);
             Log.wtf(TAG, errorMessage);
-            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage, null);
+            sendResultsToReceiver(Constants.FAILURE_RESULT, errorMessage, null);
             return;
         }
 
@@ -75,7 +75,7 @@ public class FetchLocationIntentService extends IntentService {
                 Log.e(TAG, errorMessage);
             }
 
-            deliverResultToReceiver(Constants.FAILURE_RESULT, errorMessage, null);
+            sendResultsToReceiver(Constants.FAILURE_RESULT, errorMessage, null);
 
         } else  {
 
@@ -83,16 +83,13 @@ public class FetchLocationIntentService extends IntentService {
             String resultStr = getString(R.string.location_found);
             Log.i(TAG, resultStr);
 
-            deliverResultToReceiver(Constants.SUCCESS_RESULT, resultStr, result);
+            sendResultsToReceiver(Constants.SUCCESS_RESULT, resultStr, result);
         }
 
 
     }
 
-    /**
-     * Sends a resultCode and message to the receiver.
-     */
-    private void deliverResultToReceiver(int resultCode, String resultStr, Address address) {
+    private void sendResultsToReceiver(int resultCode, String resultStr, Address address) {
         Bundle bundle = new Bundle();
         bundle.putInt(Constants.RESULT_CODE, resultCode);
         bundle.putString(Constants.RESULT_STRING, resultStr);

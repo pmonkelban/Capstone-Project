@@ -22,12 +22,9 @@ import java.util.List;
 
 public class WheelView extends AdapterView<CursorAdapter> {
 
-    private static final int RADIUS = 200;
     private static String MAX_STRING_LEN = "This is really the longest label allowed";
     private static final int INNER_PADDING = 75;
     private static final int OUTER_PADDING = 25;
-
-    private int rotation = 0;
 
     /*
     * TODO: Max length should be based on the space available, not the number of characters.
@@ -80,10 +77,6 @@ public class WheelView extends AdapterView<CursorAdapter> {
 
     }
 
-    public void setGestureDetector(GestureDetectorCompat gestureDetector) {
-        this.mGestureDetector = gestureDetector;
-    }
-
     @Override
     public View getSelectedView() {
         Log.d(TAG, "getSelectedView()");
@@ -127,8 +120,6 @@ public class WheelView extends AdapterView<CursorAdapter> {
         mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBorderPaint.setColor(Color.BLACK);
         mBorderPaint.setTextSize(15f);
-
-        rotation = 0;
 
     }
 
@@ -188,7 +179,6 @@ public class WheelView extends AdapterView<CursorAdapter> {
 
         setMeasuredDimension(widthSize, heightSize);
 
-
     }
 
     private static int getMeasurement(int measureSpec, int contentSize) {
@@ -197,15 +187,12 @@ public class WheelView extends AdapterView<CursorAdapter> {
         int resultSize = 0;
         switch (specMode) {
             case View.MeasureSpec.UNSPECIFIED:
-                //Big as we want to be
                 resultSize = contentSize;
                 break;
             case View.MeasureSpec.AT_MOST:
-                //Big as we want to be, up to the spec
                 resultSize = Math.min(contentSize, specSize);
                 break;
             case View.MeasureSpec.EXACTLY:
-                //Must be the spec size
                 resultSize = specSize;
                 break;
         }
