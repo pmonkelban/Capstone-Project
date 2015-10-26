@@ -43,16 +43,33 @@ public class ResultFragment extends Fragment {
         final String RESULT_QUERY_WHERE_CLAUSE =
                 DataContract.RestaurantEntry.COLUMN_SELECTED + " = 1";
 
+        final String RESULT_QUERY_WHERE_CLAUSE_INTENT =
+                DataContract.RestaurantEntry.COLUMN_ID + " = ?";
+
+
         Cursor c = null;
 
         try {
 
-            c = getActivity().getApplicationContext().getContentResolver().query(
-                    DataContract.RestaurantEntry.CONTENT_URI,
-                    null,
-                    RESULT_QUERY_WHERE_CLAUSE,
-                    null,
-                    null);
+            if (intent.hasExtra(Constants.INTENT_RESULT_ID)) {
+
+                c = getActivity().getApplicationContext().getContentResolver().query(
+                        DataContract.RestaurantEntry.CONTENT_URI,
+                        null,
+                        RESULT_QUERY_WHERE_CLAUSE_INTENT,
+                        new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
+                        null);
+
+            } else  {
+
+                c = getActivity().getApplicationContext().getContentResolver().query(
+                        DataContract.RestaurantEntry.CONTENT_URI,
+                        null,
+                        RESULT_QUERY_WHERE_CLAUSE,
+                        null,
+                        null);
+
+            }
 
             mResultName = (TextView) view.findViewById(R.id.result_name);
             mResultUrl = (TextView) view.findViewById(R.id.result_url);

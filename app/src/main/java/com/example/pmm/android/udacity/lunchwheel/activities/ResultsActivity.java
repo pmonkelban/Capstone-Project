@@ -65,15 +65,33 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         final String RESULT_QUERY_WHERE_CLAUSE =
                 DataContract.RestaurantEntry.COLUMN_SELECTED + " = 1";
 
+        final String RESULT_QUERY_WHERE_CLAUSE_INTENT =
+                DataContract.RestaurantEntry.COLUMN_ID + " = ?";
+
         Cursor c = null;
 
         try {
-            c = getApplicationContext().getContentResolver().query(
-                    DataContract.RestaurantEntry.CONTENT_URI,
-                    null,
-                    RESULT_QUERY_WHERE_CLAUSE,
-                    null,
-                    null);
+
+
+            if (intent.hasExtra(Constants.INTENT_RESULT_ID)) {
+
+                c = getApplicationContext().getContentResolver().query(
+                        DataContract.RestaurantEntry.CONTENT_URI,
+                        null,
+                        RESULT_QUERY_WHERE_CLAUSE_INTENT,
+                        new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
+                        null);
+
+            } else  {
+
+                c = getApplicationContext().getContentResolver().query(
+                        DataContract.RestaurantEntry.CONTENT_URI,
+                        null,
+                        RESULT_QUERY_WHERE_CLAUSE,
+                        null,
+                        null);
+
+            }
 
             if (c != null) {
                 c.moveToFirst();
