@@ -63,7 +63,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
         mStartLat = intent.getFloatExtra(Constants.INTENT_LATITUDE, 0f);
 
         final String RESULT_QUERY_WHERE_CLAUSE =
-                DataContract.RestaurantEntry.COLUMN_ID + " = ?";
+                DataContract.RestaurantEntry.COLUMN_SELECTED + " = 1";
 
         Cursor c = null;
 
@@ -72,7 +72,7 @@ public class ResultsActivity extends AppCompatActivity implements OnMapReadyCall
                     DataContract.RestaurantEntry.CONTENT_URI,
                     null,
                     RESULT_QUERY_WHERE_CLAUSE,
-                    new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
+                    null,
                     null);
 
             if (c != null) {

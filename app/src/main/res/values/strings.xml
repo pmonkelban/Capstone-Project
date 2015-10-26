@@ -10,6 +10,8 @@
     <string name="todays_lunch_is_at">Today\'s Lunch will be at...</string>
     <string name="start">Start</string>
 
+    <string name="widget_title">LunchWheel Widget</string>
+
     <string name="share_text">Meet me here for lunch:\n
         Name: %1$s\n
         Address: %2$s\n
@@ -55,6 +57,7 @@
 
     <!-- IO Errors -->
     <string name="error_oauth_exception">Error retrieving data.  Check network connection.</string>
+    <string name="no_data">No data available.</string>
 
     <!-- Content Descriptions -->
     <string name="desc_logo">LunchWheel logo</string>

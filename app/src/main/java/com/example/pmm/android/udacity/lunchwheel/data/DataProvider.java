@@ -2,6 +2,7 @@ package com.example.pmm.android.udacity.lunchwheel.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,9 +24,14 @@ public class DataProvider extends ContentProvider {
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
+    public static final String ACTION_DATA_UPDATED =
+            "com.example.pmm.android.udacity.lunchwheel.ACTION_DATA_UPDATED";
+
+
     private DataHelper mDataHelper;
 
     static final int RESTAURANT = 100;
+    static final int RESET_SELECTED = 200;
 
     static UriMatcher buildUriMatcher()  {
 
@@ -149,6 +155,12 @@ public class DataProvider extends ContentProvider {
         }
         if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
+
+            /*
+            * Send this out to update the widget.
+            */
+            Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
+            getContext().sendBroadcast(dataUpdatedIntent);
         }
         return rowsUpdated;
     }

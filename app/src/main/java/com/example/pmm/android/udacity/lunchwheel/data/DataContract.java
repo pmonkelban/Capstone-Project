@@ -16,12 +16,8 @@ public class DataContract {
 
     public static final String PATH_RESTAURANT = "restaurants";
 
-
-
-
     /* Inner class that defines the table contents of the location table */
     public static final class RestaurantEntry implements BaseColumns {
-
 
         public static final Uri CONTENT_URI =
                 BASE_CONTENT_URI.buildUpon().appendPath(PATH_RESTAURANT).build();
@@ -39,6 +35,7 @@ public class DataContract {
         public static final String COLUMN_COORD_LAT = "coord_lat";
         public static final String COLUMN_ADDRESS = "address_1";
         public static final String COLUMN_PHONE = "phone";
+        public static final String COLUMN_SELECTED = "selected";
 
         public static Uri buildLRestaurantUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

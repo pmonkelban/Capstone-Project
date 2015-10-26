@@ -1,6 +1,7 @@
 package com.example.pmm.android.udacity.lunchwheel.activities;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -65,7 +66,9 @@ public class MainActivity extends AppCompatActivity
     Animation mRotateWheelAnimationClockWise;
     Animation mRotateWheelAnimationCounterClockWise;
 
-    private enum SPIN_DIR {CLOCKWISE, COUNTERCLOCKWISE};
+    private enum SPIN_DIR {CLOCKWISE, COUNTERCLOCKWISE}
+
+    ;
 
 
     Intent mShowResultsIntent;
@@ -103,8 +106,8 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode)  {
-                Log.e(TAG, "Ad failed to load.  errorCode="+errorCode);
+            public void onAdFailedToLoad(int errorCode) {
+                Log.e(TAG, "Ad failed to load.  errorCode=" + errorCode);
                 super.onAdFailedToLoad(errorCode);
 
                 /*
@@ -230,12 +233,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private void doSpinWheel()  {
+    private void doSpinWheel() {
         mSpinButton.setEnabled(false);
 
         if (rnd.nextBoolean()) {
             mWheelView.startAnimation(mRotateWheelAnimationClockWise);
-        } else  {
+        } else {
             mWheelView.startAnimation(mRotateWheelAnimationCounterClockWise);
         }
 
@@ -246,6 +249,23 @@ public class MainActivity extends AppCompatActivity
         Cursor c = null;
 
         try {
+
+            /*
+            * Set Selected column to 0 for all entries.
+            */
+            ContentValues values = new ContentValues();
+            values.put(DataContract.RestaurantEntry.COLUMN_SELECTED, 0);
+
+            getApplicationContext().getContentResolver().update(
+                    DataContract.RestaurantEntry.CONTENT_URI,
+                    values,
+                    null,
+                    null
+            );
+
+            /*
+            * Retreive all entries from the database.
+            */
             c = getApplicationContext().getContentResolver().query(
                     DataContract.RestaurantEntry.CONTENT_URI,
                     null,
@@ -262,12 +282,24 @@ public class MainActivity extends AppCompatActivity
                 return;
             }
 
+            // Pick one at random.
             int randomPositon = rnd.nextInt(c.getCount());
 
             c.moveToPosition(randomPositon);
 
+            /*
+            * Set that entry's selected column to 1.
+            */
+            values.put(DataContract.RestaurantEntry.COLUMN_SELECTED, 1);
+
+            getApplicationContext().getContentResolver().update(
+                    DataContract.RestaurantEntry.CONTENT_URI,
+                    values,
+                    DataContract.RestaurantEntry.COLUMN_ID + "=?",
+                    new String[]{c.getString(DataProvider.RESTAURANT_INDEX_ID)}
+            );
+
             Intent intent = new Intent(getApplicationContext(), ResultsActivity.class);
-            intent.putExtra(Constants.INTENT_RESULT_ID, c.getString(DataProvider.RESTAURANT_INDEX_ID));
 
         /*
         * Add the starting location to the intent.
@@ -284,9 +316,9 @@ public class MainActivity extends AppCompatActivity
 
             startActivity(intent);
 
-        } finally  {
+        } finally {
 
-            if ((c != null) && (!c.isClosed()))  {
+            if ((c != null) && (!c.isClosed())) {
                 c.close();
             }
         }

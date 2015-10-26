@@ -41,7 +41,7 @@ public class ResultFragment extends Fragment {
         Intent intent = getActivity().getIntent();
 
         final String RESULT_QUERY_WHERE_CLAUSE =
-                DataContract.RestaurantEntry.COLUMN_ID + " = ?";
+                DataContract.RestaurantEntry.COLUMN_SELECTED + " = 1";
 
         Cursor c = null;
 
@@ -51,7 +51,7 @@ public class ResultFragment extends Fragment {
                     DataContract.RestaurantEntry.CONTENT_URI,
                     null,
                     RESULT_QUERY_WHERE_CLAUSE,
-                    new String[]{intent.getStringExtra(Constants.INTENT_RESULT_ID)},
+                    null,
                     null);
 
             mResultName = (TextView) view.findViewById(R.id.result_name);

@@ -70,6 +70,19 @@
             android:name=".services.SearchService"
             android:exported="false"/>
 
+        <receiver
+            android:name=".widget.WidgetProvider"
+            android:label="@string/widget_title">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.pmm.android.udacity.lunchwheel.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_lunchwheel" />
+        </receiver>
+
+        <service android:name=".widget.WidgetIntentService" />
+
     </application>
 
 </manifest>

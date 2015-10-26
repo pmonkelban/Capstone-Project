@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 7;
 
     static final String DATABASE_NAME = "wheel.db";
 
@@ -26,7 +26,8 @@ public class DataHelper extends SQLiteOpenHelper {
                         DataContract.RestaurantEntry.COLUMN_COORD_LON + " REAL, " +
                         DataContract.RestaurantEntry.COLUMN_COORD_LAT + " REAL, " +
                         DataContract.RestaurantEntry.COLUMN_ADDRESS + " TEXT, " +
-                        DataContract.RestaurantEntry.COLUMN_PHONE + " TEXT" +
+                        DataContract.RestaurantEntry.COLUMN_PHONE + " TEXT, " +
+                        DataContract.RestaurantEntry.COLUMN_SELECTED + " INTEGER DEFAULT 0" +
                         ")";
 
         db.execSQL(CREATE_RESTAURANT_TABLE);
