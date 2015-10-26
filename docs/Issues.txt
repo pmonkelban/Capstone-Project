@@ -1,6 +1,0 @@
-O  Spin button can be hidden off the bottom of the screen.  Saw this on a tablet in landscape mode.
-
-O  Add a preference that stores the lat/lon associated with the currently stored data.
-
-O  Allow the user to choose between best match, highest rannking, or closest.
-
