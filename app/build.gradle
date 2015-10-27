@@ -13,9 +13,9 @@ android {
     signingConfigs {
         release {
             storeFile file("~/android_keystore.jks")
-            storePassword System.console().readLine("\nKeystore password: ")
+            storePassword "CBR954gsxr1K"
             keyAlias "android_key"
-            keyPassword System.console().readLine("\nKey password: ")
+            keyPassword "CBR954gsxr1K"
         }
     }
     buildTypes {

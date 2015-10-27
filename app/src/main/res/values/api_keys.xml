@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="yelp_consumer_key"></string>
-    <string name="yelp_consumer_secret"></string>
-    <string name="yelp_token"></string>
-    <string name="yelp_token_secret"></string>
+    <string name="yelp_consumer_key">FJIgDiT-u-CNYND8oAM3sg</string>
+    <string name="yelp_consumer_secret">VVtQiXC9V6EkVTgALvliSL0vFTg</string>
+    <string name="yelp_token">sXgAR2xVkL93WV0Qi7sV_s4rrN_U2qvv</string>
+    <string name="yelp_token_secret">YIrx3G6GkfjG1tTOxfTCkZjm-hw</string>
 
-    <string name="interstitial_ad_id"></string>
+    <string name="interstitial_ad_id">ca-app-pub-3940256099942544/1033173712</string>
 
-    <string name="gmaps_api_key"></string>
+    <string name="gmaps_api_key">AIzaSyCLH132GjuJ8NyNG45ITw63bFFYLKpgmaE</string>
 
 </resources>
